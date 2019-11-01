@@ -2,13 +2,13 @@
 // Created by fourteener on 11/1/19.
 //
 
-#include <iostream>
+#include <cmath>
 
 #include "Player.h"
 
 // Blank player constructor
 Player::Player () {
-    x = -1, y = -1, vx = -1, vy = -1, gravity = -1, movementSpeed = -1, drag = -1;
+    x = -1, y = -1, vx = -1, vy = -1, movementSpeed = -1;
     initialized = false;
 };
 
@@ -40,9 +40,7 @@ Player::Player(Board &board) {
     vy = 0;
 
     // Define gravity, movement speed, and drag
-    gravity = 6;
-    movementSpeed = 2;
-    drag = 0.5;
+    movementSpeed = 12;
 
     // Mark as initialized
     initialized = true;
@@ -59,68 +57,66 @@ sf::Vector2f Player::getPos() {
 }
 
 // Move the player if the key is held by adding velocity
-void Player::move(bool left, bool right) {
-    double deltaTime = movementClock.getElapsedTime().asMilliseconds() / 1000.0;
-    vx -= left * movementSpeed * deltaTime;
-    vx += right * movementSpeed * deltaTime;
+void Player::move(bool left, bool right, bool up, bool down) {
+    deltaTime = movementClock.getElapsedTime().asMilliseconds() / 1000.0;
+    if (left && right)
+        vx = 0;
+    else if (left)
+        vx = -left * movementSpeed;
+    else if (right)
+        vx = right * movementSpeed;
 
-    // Makes it not feel like ice physics
-    if (!left && !right) {
-        vx *= 0.85;
+    if (up && down)
+        vy = 0;
+    else if (up)
+        vy = -up * movementSpeed;
+    else if (down)
+        vy = down * movementSpeed;
+
+    // Prevents sqrt(2) speed boost
+    if ((left ||right) && (up || down)) {
+        vx /= sqrt(2);
+        vy /= sqrt(2);
     }
 
     // And tick player physics
-    tickPhysics(deltaTime);
+    tickPhysics();
 }
 
 // Perform a physics tick
-void Player::tickPhysics(double deltaTime) {
-    // Add gravity, the maximum fall speed is about 0.28 based on framerate
-    vy -= gravity * deltaTime;
-
-    // Handle drag forces
-    int xSign = (vx > 0) ? 1 : -1;
-    int ySign = (vy > 0) ? 1 : -1;
-    double xMag = vx * xSign;
-    double yMag = vy * ySign;
-    vx -= xSign * (xMag * xMag) * drag;
-    vy -= ySign * (yMag * yMag) * drag;
-    xSign = (vx > 0) ? 1 : -1;
-    ySign = (vy > 0) ? 1 : -1;
-
+void Player::tickPhysics() {
     // Enforce a minimum speed
-    if (vx * xSign < 0.02)
+    if (vx * vx < 1)
         vx = 0;
-    if (vy * ySign < 0.02)
+    if (vy * vy < 1)
         vy = 0;
 
-    // Handle collisions, including accounting for player size
-    int tileSize = gameboard.getTileSize();
-    bool yColl = false;
-    if (ySign > 0) {
-        while (gameboard.isColliding(x,y+vy*tileSize+1)) {
-            yColl = true;
-            vy -= 0.01;
-        }
-    }
-    else if (ySign < 0) {
-        while (gameboard.isColliding(x,y+vy*tileSize)) {
-            yColl = true;
-            vy += 0.01;
-        }
-    }
-
     // Translate the player
-    x += vx;
-    y += vy;
+    x += vx * deltaTime;
+    y += vy * deltaTime;
+
+    vx -= vx * deltaTime * 25;
+    vy -= vy * deltaTime * 25;
+
+    // Stop winding up in walls
+    // AKA Poor man's collision detection
+    while (true) {
+        if (!gameboard.isColliding(x, y) && gameboard.isColliding(x + 1, y)) {
+            x -= 0.01;
+        } else if (!gameboard.isColliding(x + 1, y) && gameboard.isColliding(x, y)) {
+            x += 0.01;
+        } else if (!gameboard.isColliding(x, y) && gameboard.isColliding(x, y + 1)) {
+            y -= 0.01;
+        } else if (!gameboard.isColliding(x, y + 1) && gameboard.isColliding(x, y)) {
+            y += 0.01;
+        }
+        else {
+            break;
+        }
+    }
 
     // Restart the movement clock for next delta time
     movementClock.restart();
-}
-
-// Jump!
-void Player::jump() {
-
 }
 
 // The player has died

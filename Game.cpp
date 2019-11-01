@@ -30,6 +30,8 @@ void Game::run(const int windowSize, const int tileSize) {
     bool keyNewMap = false;
     bool keyMovingLeft = false;
     bool keyMovingRight = false;
+    bool keyMovingUp = false;
+    bool keyMovingDown = false;
 
     // Central game loop
     while (window.isOpen()) {
@@ -62,6 +64,17 @@ void Game::run(const int windowSize, const int tileSize) {
                     else if (event.key.code == sf::Keyboard::D && !keyMovingRight) {
                         keyMovingRight = true;
                     }
+
+                    // Start moving up
+                    else if (event.key.code == sf::Keyboard::W && !keyMovingUp) {
+                        keyMovingUp = true;
+                    }
+
+                    // Start moving down
+                    else if (event.key.code == sf::Keyboard::S && !keyMovingDown) {
+                        keyMovingDown = true;
+                    }
+
                     break;
 
                 case sf::Event::KeyReleased:
@@ -74,6 +87,12 @@ void Game::run(const int windowSize, const int tileSize) {
                     }
                     else if (event.key.code == sf::Keyboard::D) {
                         keyMovingRight = false;
+                    }
+                    else if (event.key.code == sf::Keyboard::W) {
+                        keyMovingUp = false;
+                    }
+                    else if (event.key.code == sf::Keyboard::S) {
+                        keyMovingDown = false;
                     }
                     break;
 
@@ -92,7 +111,7 @@ void Game::run(const int windowSize, const int tileSize) {
 
         // Player movement update
         if (player.isInitialized()) {
-            player.move(keyMovingLeft, keyMovingRight);
+            player.move(keyMovingLeft, keyMovingRight, keyMovingUp, keyMovingDown);
         }
 
         // Clear the current display
