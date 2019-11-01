@@ -14,8 +14,9 @@ public:
     void blankBoard(int windowSize, int tileSize);
     void newBoard();
     bool isGenerating();
+    bool isColliding (double x, double y);
     std::vector< std::vector<bool> > getBoard();
-
+    int getTileSize();
 
 private:
     std::vector< std::vector<bool> > tiles;
@@ -23,6 +24,7 @@ private:
     sf::Clock clock;
     bool buildingBoard;
     int iterType;
+    int tileSize;
     bool regenerate;
     void fillBoard();
     void iterate();

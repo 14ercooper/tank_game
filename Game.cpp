@@ -7,6 +7,7 @@
 
 #include "Game.h"
 #include "Board.h"
+#include "Player.h"
 
 using std::vector;
 
@@ -20,6 +21,10 @@ void Game::run(const int windowSize, const int tileSize) {
     // Create a new board object and initialize it to start
     Board board;
     board.blankBoard(windowSize, tileSize);
+    board.newBoard();
+
+    // Create a player object
+    Player player;
 
     // Key deduplication variables
     bool keyNewMap = false;
@@ -42,6 +47,7 @@ void Game::run(const int windowSize, const int tileSize) {
                     // If pressed n, start regenerating the board
                     if (event.key.code == sf::Keyboard::N && !keyNewMap) {
                         board.newBoard();
+                        player = Player();
                         keyNewMap = true;
                     }
                     break;
@@ -64,6 +70,13 @@ void Game::run(const int windowSize, const int tileSize) {
 
        // Poll the board for updates
        board.pollBoard();
+        if (!player.initialized && !board.isGenerating()) {
+            player = Player(board);
+        }
+
+        // Physics update
+
+        // Player movement update
 
         // Clear the current display
         window.clear(sf::Color::Black);
@@ -94,6 +107,16 @@ void Game::run(const int windowSize, const int tileSize) {
         for (sf::RectangleShape s : tileShapes) {
             window.draw(s);
         }
+
+        // Draw the player
+        if (player.initialized) {
+            sf::Vector2f playerPos = player.getPos();
+            sf::RectangleShape player (sf::Vector2f(tileSize, tileSize));
+            player.setPosition(playerPos);
+            player.setFillColor(sf::Color::Red);
+            window.draw(player);
+        }
+
 
         // Draw the window
         window.display();

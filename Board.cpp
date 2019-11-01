@@ -56,6 +56,8 @@ void Board::blankBoard(int windowSize, int tileSize) {
     }
     tiles = newTiles;
 
+    this->tileSize = tileSize;
+
     // Specific for iterations
     iterationsDone = 0;
     buildingBoard = false;
@@ -81,6 +83,10 @@ bool Board::isGenerating() {
     return buildingBoard;
 }
 
+int Board::getTileSize() {
+    return tileSize;
+}
+
 // Starts a board generation
 void Board::newBoard () {
     if (buildingBoard)
@@ -93,6 +99,23 @@ void Board::newBoard () {
     iterType = 1;
     buildingBoard = true;
     regenerate = false;
+}
+
+// Checks collision at the given point
+bool Board::isColliding(double x, double y) {
+    // Chop off the decimal to get the tile to check
+    int xC = x;
+    int yC = y;
+
+    // Make sure it's in the world
+    const int mapSize = (tiles.size()) - 1;
+    if (xC < 0 || yC < 0 || xC > mapSize || yC > mapSize) {
+        return true;
+    }
+
+    // Return collision
+    return tiles.at(xC).at(yC);
+
 }
 
 // Fills the board randomly based on start chance
