@@ -15,8 +15,8 @@ int main() {
     std::rand();
 
     // Window and tile sizes
-    const int windowSize = 1000;
-    const int tileSize = 10;
+    const int windowSize = 1024;
+    int tileSize = 16;
 
     // Start the game
     Game game;

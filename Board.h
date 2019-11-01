@@ -22,6 +22,7 @@ private:
     int iterationsDone;
     sf::Clock clock;
     bool buildingBoard;
+    int iterType;
     bool regenerate;
     void fillBoard();
     void iterate();
@@ -30,10 +31,9 @@ private:
     void fillWalls();
     void floodFill();
 
-    // Cave generation variables
+    // Cave generation constants
     int firstIters;
     int secondIters;
-    int iterType;
     double startChance;
     int makeWall;
     int bigArea;

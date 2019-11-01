@@ -20,7 +20,7 @@ struct Tile {
 // In charge of determining if anything needs to happen with the board
 void Board::pollBoard() {
     if (buildingBoard) {
-        int mapDelay = 0;
+        int mapDelay = 0; // This can be used to debug the cellular automatically
         if (clock.getElapsedTime().asMilliseconds() >= mapDelay) {
             iterate();
             iterationsDone++;
@@ -44,7 +44,7 @@ void Board::pollBoard() {
 
 // Replaces the current board with a blank board and initializes the board class
 void Board::blankBoard(int windowSize, int tileSize) {
-    int numTiles = windowSize / tileSize;
+    const int numTiles = windowSize / tileSize;
 
     vector< vector<bool> > newTiles;
     for (int i = 0; i < numTiles; i++) {
@@ -67,7 +67,7 @@ void Board::blankBoard(int windowSize, int tileSize) {
     secondIters = 12;
     startChance = 0.45;
     makeWall = 5;
-    bigArea = 1;
+    bigArea = 2;
     airPercent = 0.55;
 }
 
@@ -97,7 +97,7 @@ void Board::newBoard () {
 
 // Fills the board randomly based on start chance
 void Board::fillBoard() {
-    int numTiles = tiles.size();
+    const int numTiles = tiles.size();
 
     vector< vector<bool> > newBoard;
     for (int i = 0; i < numTiles; i++) {
@@ -120,7 +120,7 @@ void Board::fillBoard() {
 // Performs a smoothing iteration on the board
 // This is done using cellular automata
 void Board::iterate() {
-    int numTiles = tiles.size();
+    const int numTiles = tiles.size();
 
     vector< vector<bool> > newBoard;
     for (int i = 0; i < numTiles; i++) {
@@ -138,12 +138,13 @@ void Board::iterate() {
 // Is the tile a wall?
 // Handles the actual cellular automata
 bool Board::isWall(int x, int y) {
-    bool isWall = tiles.at(x).at(y);
-
     if (iterType == 1) {
         int oneStep = getNearbyWalls(x,y,1);
         int twoStep = getNearbyWalls(x,y,2);
-        if (oneStep >= makeWall || twoStep <= bigArea)
+        int threeStep = getNearbyWalls(x,y,3);
+        if (twoStep > 18 || threeStep > 38)
+            return true;
+        if ((oneStep >= makeWall || twoStep <= bigArea))
             return true;
         return false;
     }
@@ -160,8 +161,7 @@ bool Board::isWall(int x, int y) {
 int Board::getNearbyWalls(int x, int y, int steps) {
     // There are 9 possible tiles
     int wallCount = 0;
-    int mapSize = tiles.size();
-    mapSize = mapSize - 1;
+    const int mapSize = (tiles.size()) - 1;
 
     for (int i = -1 * steps; i <= steps; i++) {
         for (int j = -1 * steps; j <= steps; j++) {
@@ -181,8 +181,7 @@ int Board::getNearbyWalls(int x, int y, int steps) {
 
 // Makes sure the entire map is surrounded by walls
 void Board::fillWalls() {
-    int mapSize = tiles.size();
-    mapSize--;
+    const int mapSize = (tiles.size()) - 1;
     for (int i = 0; i < mapSize; i++) {
         tiles.at(0).at(i) = true;
         tiles.at(i).at(0) = true;
@@ -195,7 +194,7 @@ void Board::fillWalls() {
 void Board::floodFill() {
 
     int numMadeAir = 0;
-    int mapSize = tiles.size();
+    const int mapSize = tiles.size();
     int totalTiles = mapSize * mapSize;
 
     // Pick a random air tile
@@ -229,7 +228,6 @@ void Board::floodFill() {
             floodTiles.emplace_back(xC-1,yC);
             floodTiles.emplace_back(xC,yC-1);
         }
-
     }
 
     // Make sure at least airPercent of the map is air
