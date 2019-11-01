@@ -21,7 +21,7 @@ public:
 
 private:
     double x, y, vx, vy, movementSpeed, deltaTime;
-    bool initialized;
+    bool initialized, one, two, three, four;
     Board gameboard;
     sf::Clock movementClock;
 };

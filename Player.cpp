@@ -39,8 +39,9 @@ Player::Player(Board &board) {
     vx = 0;
     vy = 0;
 
-    // Define gravity, movement speed, and drag
+    // Define movement speed and collision variables
     movementSpeed = 12;
+    one = two = three = four = true;
 
     // Mark as initialized
     initialized = true;
@@ -92,6 +93,8 @@ void Player::tickPhysics() {
         vy = 0;
 
     // Translate the player
+    double oldX = x;
+    double oldY = y;
     x += vx * deltaTime;
     y += vy * deltaTime;
 
@@ -100,19 +103,13 @@ void Player::tickPhysics() {
 
     // Stop winding up in walls
     // AKA Poor man's collision detection
-    while (true) {
-        if (!gameboard.isColliding(x, y) && gameboard.isColliding(x + 1, y)) {
-            x -= 0.01;
-        } else if (!gameboard.isColliding(x + 1, y) && gameboard.isColliding(x, y)) {
-            x += 0.01;
-        } else if (!gameboard.isColliding(x, y) && gameboard.isColliding(x, y + 1)) {
-            y -= 0.01;
-        } else if (!gameboard.isColliding(x, y + 1) && gameboard.isColliding(x, y)) {
-            y += 0.01;
-        }
-        else {
-            break;
-        }
+    if (gameboard.isColliding(x + 0.02,y + 0.02)
+        || gameboard.isColliding(x + 0.02,y + 0.98)
+        || gameboard.isColliding(x + 0.98,y + 0.02)
+        || gameboard.isColliding(x + 0.98,y + 0.98)) {
+
+        x = oldX;
+        y = oldY;
     }
 
     // Restart the movement clock for next delta time
