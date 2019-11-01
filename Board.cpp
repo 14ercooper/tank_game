@@ -115,7 +115,6 @@ bool Board::isColliding(double x, double y) {
 
     // Return collision
     return tiles.at(xC).at(yC);
-
 }
 
 // Fills the board randomly based on start chance

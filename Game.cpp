@@ -28,6 +28,8 @@ void Game::run(const int windowSize, const int tileSize) {
 
     // Key deduplication variables
     bool keyNewMap = false;
+    bool keyMovingLeft = false;
+    bool keyMovingRight = false;
 
     // Central game loop
     while (window.isOpen()) {
@@ -50,14 +52,28 @@ void Game::run(const int windowSize, const int tileSize) {
                         player = Player();
                         keyNewMap = true;
                     }
+
+                    // Start moving left
+                    else if (event.key.code == sf::Keyboard::A && !keyMovingLeft) {
+                        keyMovingLeft = true;
+                    }
+
+                    // Start moving right
+                    else if (event.key.code == sf::Keyboard::D && !keyMovingRight) {
+                        keyMovingRight = true;
+                    }
                     break;
 
                 case sf::Event::KeyReleased:
-                    // If the user releases a key; see if anything needs to be done
-
-                    // If pressed n, start regenerating the board
+                    // If the user releases a key; disable the key deduplication if needed
                     if (event.key.code == sf::Keyboard::N) {
                         keyNewMap = false;
+                    }
+                    else if (event.key.code == sf::Keyboard::A) {
+                        keyMovingLeft = false;
+                    }
+                    else if (event.key.code == sf::Keyboard::D) {
+                        keyMovingRight = false;
                     }
                     break;
 
@@ -70,13 +86,14 @@ void Game::run(const int windowSize, const int tileSize) {
 
        // Poll the board for updates
        board.pollBoard();
-        if (!player.initialized && !board.isGenerating()) {
+        if (!player.isInitialized() && !board.isGenerating()) {
             player = Player(board);
         }
 
-        // Physics update
-
         // Player movement update
+        if (player.isInitialized()) {
+            player.move(keyMovingLeft, keyMovingRight);
+        }
 
         // Clear the current display
         window.clear(sf::Color::Black);
@@ -109,7 +126,7 @@ void Game::run(const int windowSize, const int tileSize) {
         }
 
         // Draw the player
-        if (player.initialized) {
+        if (player.isInitialized()) {
             sf::Vector2f playerPos = player.getPos();
             sf::RectangleShape player (sf::Vector2f(tileSize, tileSize));
             player.setPosition(playerPos);

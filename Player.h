@@ -12,16 +12,17 @@
 class Player {
 public:
     Player();
-    Player(Board& board);
+    explicit Player(Board& board);
     void jump();
-    void move(double left, double right);
+    void move(bool left, bool right);
     void die();
-    bool initialized;
+    void tickPhysics(double deltaTime);
+    bool isInitialized();
     sf::Vector2f getPos();
 
 private:
-    double x, y;
-    double vx, vy, gravity;
+    double x, y, vx, vy, gravity, movementSpeed, drag;
+    bool initialized;
     Board gameboard;
     sf::Clock movementClock;
 };
