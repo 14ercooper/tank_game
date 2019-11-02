@@ -113,13 +113,13 @@ void Player::tickPhysics() {
         didMovementCorrect = false;
     }
 
-    // Stop strange behavior when touching walls
+    // Make movement near walls feel better
     if (didMovementCorrect) {
         wallSlide();
         cornerSlip();
     }
 
-    // Slow down for the future
+    // Slow down for the next tick
     vx -= vx * deltaTime * 25;
     vy -= vy * deltaTime * 25;
 
@@ -129,7 +129,62 @@ void Player::tickPhysics() {
 
 // Slide along walls if needed
 void Player::wallSlide() {
-    
+    if (vy < 0) {
+        if (gameboard.isColliding(x+0.5, y - 0.05)) {
+            if (vx > 0) {
+                if (!gameboard.isColliding(x + 1.05, y + 0.5)) {
+                    x += movementSpeed * deltaTime;
+                }
+            }
+            if (vx < 0) {
+                if (!gameboard.isColliding(x - 0.05, y + 0.5)) {
+                    x -= movementSpeed * deltaTime;
+                }
+            }
+        }
+    }
+    if (vy > 0) {
+        if (gameboard.isColliding(x + 0.5, y + 1.05)) {
+            if (vx > 0) {
+                if (!gameboard.isColliding(x + 1.05, y + 0.5)) {
+                    x += movementSpeed * deltaTime;
+                }
+            }
+            if (vx < 0) {
+                if (!gameboard.isColliding(x - 0.05, y + 0.5)) {
+                    x -= movementSpeed * deltaTime;
+                }
+            }
+        }
+    }
+    if (vx < 0) {
+        if (gameboard.isColliding(x - 0.05, y + 0.5)) {
+            if (vy > 0) {
+                if (!gameboard.isColliding(x + 0.5, y + 1.05)) {
+                    y += movementSpeed * deltaTime;
+                }
+            }
+            if (vy < 0) {
+                if (!gameboard.isColliding(x + 0.5, y - 0.05)) {
+                    y -= movementSpeed * deltaTime;
+                }
+            }
+        }
+    }
+    if (vx > 0) {
+        if (gameboard.isColliding(x + 1.05, y + 0.5)) {
+            if (vy > 0) {
+                if (!gameboard.isColliding(x + 0.5, y + 1.05)) {
+                    y += movementSpeed * deltaTime;
+                }
+            }
+            if (vy < 0) {
+                if (!gameboard.isColliding(x + 0.5, y - 0.05)) {
+                    y -= movementSpeed * deltaTime;
+                }
+            }
+        }
+    }
 }
 
 // Slide around corners if you just barely clip them
