@@ -41,7 +41,7 @@ Player::Player(Board &board) {
 
     // Define movement speed and collision variables
     movementSpeed = 12;
-    one = two = three = four = true;
+    didMovementCorrect = false;
 
     // Mark as initialized
     initialized = true;
@@ -98,9 +98,6 @@ void Player::tickPhysics() {
     x += vx * deltaTime;
     y += vy * deltaTime;
 
-    vx -= vx * deltaTime * 25;
-    vy -= vy * deltaTime * 25;
-
     // Stop winding up in walls
     // AKA Poor man's collision detection
     if (gameboard.isColliding(x + 0.02,y + 0.02)
@@ -110,10 +107,34 @@ void Player::tickPhysics() {
 
         x = oldX;
         y = oldY;
+        didMovementCorrect = true;
     }
+    else {
+        didMovementCorrect = false;
+    }
+
+    // Stop strange behavior when touching walls
+    if (didMovementCorrect) {
+        wallSlide();
+        cornerSlip();
+    }
+
+    // Slow down for the future
+    vx -= vx * deltaTime * 25;
+    vy -= vy * deltaTime * 25;
 
     // Restart the movement clock for next delta time
     movementClock.restart();
+}
+
+// Slide along walls if needed
+void Player::wallSlide() {
+    
+}
+
+// Slide around corners if you just barely clip them
+void Player::cornerSlip() {
+
 }
 
 // The player has died

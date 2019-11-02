@@ -20,8 +20,10 @@ public:
     sf::Vector2f getPos();
 
 private:
+    void wallSlide();
+    void cornerSlip();
     double x, y, vx, vy, movementSpeed, deltaTime;
-    bool initialized, one, two, three, four;
+    bool initialized, didMovementCorrect;
     Board gameboard;
     sf::Clock movementClock;
 };
