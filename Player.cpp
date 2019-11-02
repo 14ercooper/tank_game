@@ -114,6 +114,7 @@ void Player::tickPhysics() {
     }
 
     // Make movement near walls feel better
+    // (otherwise you get stuck on walls and corners and that doesn't feel good to play)
     if (didMovementCorrect) {
         wallSlide();
         cornerSlip();
@@ -182,16 +183,44 @@ void Player::wallSlide() {
 // Slide around corners if you just barely clip them
 void Player::cornerSlip() {
     if (vy > 0) {
-
+        if (vx == 0) {
+            if (!gameboard.isColliding(x - 0.45, y + 1.1)) {
+                x -= movementSpeed * deltaTime;
+            }
+            if (!gameboard.isColliding(x + 1.45, y + 1.1)) {
+                x += movementSpeed * deltaTime;
+            }
+        }
     }
     if (vy < 0) {
-
+        if (vx == 0) {
+            if (!gameboard.isColliding(x - 0.45, y - 0.1)) {
+                x -= movementSpeed * deltaTime;
+            }
+            if (!gameboard.isColliding(x + 1.45, y - 0.1)) {
+                x += movementSpeed * deltaTime;
+            }
+        }
     }
     if (vx > 0) {
-
+        if (vy == 0) {
+            if (!gameboard.isColliding(x + 1.1, y - 0.45)) {
+                y -= movementSpeed * deltaTime;
+            }
+            if (!gameboard.isColliding(x + 1.1, y + 1.45)) {
+                y += movementSpeed * deltaTime;
+            }
+        }
     }
     if (vx < 0) {
-
+        if (vy == 0) {
+            if (!gameboard.isColliding(x - 0.1, y - 0.45)) {
+                y -= movementSpeed * deltaTime;
+            }
+            if (!gameboard.isColliding(x - 0.1, y + 1.45)) {
+                y += movementSpeed * deltaTime;
+            }
+        }
     }
 }
 
