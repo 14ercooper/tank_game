@@ -130,58 +130,50 @@ void Player::tickPhysics() {
 // Slide along walls if needed
 void Player::wallSlide() {
     if (vy < 0) {
-        if (gameboard.isColliding(x+0.5, y - 0.05)) {
-            if (vx > 0) {
-                if (!gameboard.isColliding(x + 1.05, y + 0.5)) {
-                    x += movementSpeed * deltaTime;
-                }
+        if (vx > 0) {
+            if (!gameboard.isColliding(x + 1.05, y + 0.5)) {
+                x += movementSpeed * deltaTime;
             }
-            if (vx < 0) {
-                if (!gameboard.isColliding(x - 0.05, y + 0.5)) {
-                    x -= movementSpeed * deltaTime;
-                }
+        }
+        if (vx < 0) {
+            if (!gameboard.isColliding(x - 0.05, y + 0.5)) {
+                x -= movementSpeed * deltaTime;
             }
         }
     }
     if (vy > 0) {
-        if (gameboard.isColliding(x + 0.5, y + 1.05)) {
-            if (vx > 0) {
-                if (!gameboard.isColliding(x + 1.05, y + 0.5)) {
-                    x += movementSpeed * deltaTime;
-                }
+        if (vx > 0) {
+            if (!gameboard.isColliding(x + 1.05, y + 0.5)) {
+                x += movementSpeed * deltaTime;
             }
-            if (vx < 0) {
-                if (!gameboard.isColliding(x - 0.05, y + 0.5)) {
-                    x -= movementSpeed * deltaTime;
-                }
+        }
+        if (vx < 0) {
+            if (!gameboard.isColliding(x - 0.05, y + 0.5)) {
+                x -= movementSpeed * deltaTime;
             }
         }
     }
     if (vx < 0) {
-        if (gameboard.isColliding(x - 0.05, y + 0.5)) {
-            if (vy > 0) {
-                if (!gameboard.isColliding(x + 0.5, y + 1.05)) {
-                    y += movementSpeed * deltaTime;
-                }
+        if (vy > 0) {
+            if (!gameboard.isColliding(x + 0.5, y + 1.05)) {
+                y += movementSpeed * deltaTime;
             }
-            if (vy < 0) {
-                if (!gameboard.isColliding(x + 0.5, y - 0.05)) {
-                    y -= movementSpeed * deltaTime;
-                }
+        }
+        if (vy < 0) {
+            if (!gameboard.isColliding(x + 0.5, y - 0.05)) {
+                y -= movementSpeed * deltaTime;
             }
         }
     }
     if (vx > 0) {
-        if (gameboard.isColliding(x + 1.05, y + 0.5)) {
-            if (vy > 0) {
-                if (!gameboard.isColliding(x + 0.5, y + 1.05)) {
-                    y += movementSpeed * deltaTime;
-                }
+        if (vy > 0) {
+            if (!gameboard.isColliding(x + 0.5, y + 1.05)) {
+                y += movementSpeed * deltaTime;
             }
-            if (vy < 0) {
-                if (!gameboard.isColliding(x + 0.5, y - 0.05)) {
-                    y -= movementSpeed * deltaTime;
-                }
+        }
+        if (vy < 0) {
+            if (!gameboard.isColliding(x + 0.5, y - 0.05)) {
+                y -= movementSpeed * deltaTime;
             }
         }
     }
@@ -189,7 +181,18 @@ void Player::wallSlide() {
 
 // Slide around corners if you just barely clip them
 void Player::cornerSlip() {
+    if (vy > 0) {
 
+    }
+    if (vy < 0) {
+
+    }
+    if (vx > 0) {
+
+    }
+    if (vx < 0) {
+
+    }
 }
 
 // The player has died
