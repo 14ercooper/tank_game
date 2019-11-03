@@ -14,7 +14,7 @@ int main() {
     std::srand(std::time(0));
     std::rand();
 
-    // Window and tile sizes
+    // Window and tile sizes are defined here
     const int windowSize = 1024;
     int tileSize = 16;
 
