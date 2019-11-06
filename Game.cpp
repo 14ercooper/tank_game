@@ -11,12 +11,22 @@
 
 using std::vector;
 
+Game* Game::_theGame = nullptr;
+
+// Return the game
+Game* Game::getGame() {
+    return _theGame;
+}
+
 // The central game loop
 void Game::run(const int windowSize, const int tileSize) {
 
     // Initialize the window
     sf::RenderWindow window(sf::VideoMode(windowSize, windowSize), "Tile-Based Cave");
     window.setVerticalSyncEnabled(true);
+
+    // Set the game
+    _theGame = this;
 
     // Create a new board object and initialize it to start
     Board board;

@@ -26,20 +26,20 @@ public:
 
 private:
     // Helper functions to make movement near walls feel better
-    void wallSlide();
-    void cornerSlip();
+    void _wallSlide();
+    void _cornerSlip();
 
     // Movement variables
-    double x, y, vx, vy, movementSpeed, deltaTime;
+    double _x, _y, _vx, _vy, _movementSpeed, _deltaTime;
 
     // Does this player actually exist?
-    bool initialized;
+    bool _initialized;
 
     // The game's gameboard
-    Board gameboard;
+    Board _gameboard;
 
     // Used to compute deltaTime
-    sf::Clock movementClock;
+    sf::Clock _movementClock;
 };
 
 #endif //SFML_PRACTICE_PLAYER_H

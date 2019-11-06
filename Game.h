@@ -15,6 +15,10 @@ public:
     // This makes main really easy to read, and is more OOP-based
     // Also means multiple games could be launched from a single main
     void run(int windowSize, int tileSize);
+    static Game* getGame();
+
+private:
+    static Game* _theGame;
 };
 
 #endif //SFML_PRACTICE_GAME_H

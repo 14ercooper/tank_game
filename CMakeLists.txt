@@ -11,5 +11,5 @@ include_directories(SFML_DIR)
 
 find_package(SFML COMPONENTS system window graphics network audio)
 
-add_executable(SFMLApp main.cpp Game.cpp Game.h Board.cpp Board.h Player.cpp Player.h)
+add_executable(SFMLApp main.cpp Game.cpp Game.h Board.cpp Board.h Player.cpp Player.h Weapon.cpp Weapon.h)
 target_link_libraries (SFMLApp sfml-graphics sfml-window sfml-system sfml-audio)

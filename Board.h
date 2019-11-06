@@ -34,54 +34,54 @@ public:
 
 private:
     // Actually stores the board
-    std::vector< std::vector<bool> > tiles;
+    std::vector< std::vector<bool> > _tiles;
 
     // Keeps track of where in the generation process the board is
-    int iterationsDone;
-    int iterType;
+    int _iterationsDone;
+    int _iterType;
 
     // Used to be able to slow down the generation (debugging or special effects)
-    sf::Clock clock;
+    sf::Clock _clock;
 
     // Is the board being built/is it generating?
-    bool buildingBoard;
+    bool _buildingBoard;
 
     // The size of a tile
-    int tileSize;
+    int _tileSize;
 
     // If the gameboard is too small/has too little air, lets the board get regenerated
-    bool regenerate;
+    bool _regenerate;
 
     // Fills the board randomly with walls and air
-    void fillBoard();
+    void _fillBoard();
 
     // Performs a generation iteration
-    void iterate();
+    void _iterate();
 
     // Is there a wall here?
-    bool isWall(int x, int y);
+    bool _isWall(int x, int y);
 
     // Gets the number of walls with steps of the wall
     // 8-directional steps (diagonal counts as a step as well)
-    int getNearbyWalls(int x, int y, int steps);
+    int _getNearbyWalls(int x, int y, int steps);
 
     // Makes sure the board is surrounded by walls
-    void fillWalls();
+    void _fillWalls();
 
     // Picks a random air tile, and fills every air not connected with wall
     // This removes disconnected caverns
     // Picking randomly usually chooses the largest section
     // Otherwise a regneration is triggered, but this is rare and doesn't come near the maximum acceptable genration time
-    void floodFill();
+    void _floodFill();
 
     // Cave generation constants, these determine the form of the playing field
     // They are the cellular automata parameters
-    int firstIters;
-    int secondIters;
-    double startChance;
-    int makeWall;
-    int bigArea;
-    double airPercent;
+    int _firstIters;
+    int _secondIters;
+    double _startChance;
+    int _makeWall;
+    int _bigArea;
+    double _airPercent;
 };
 
 #endif //SFML_PRACTICE_BOARD_H

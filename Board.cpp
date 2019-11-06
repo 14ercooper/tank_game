@@ -23,30 +23,30 @@ struct Tile {
 void Board::pollBoard() {
 
     // If the board is being generated, perform an iteration if mapDelay milliseconds have passed since the last tick
-    if (buildingBoard) {
+    if (_buildingBoard) {
         int mapDelay = 0; // This can be used to debug the cellular automatically
-        if (clock.getElapsedTime().asMilliseconds() >= mapDelay) {
-            iterate();
-            iterationsDone++;
+        if (_clock.getElapsedTime().asMilliseconds() >= mapDelay) {
+            _iterate();
+            _iterationsDone++;
 
             // First type of iteration makes the general shape but makes a lot of small islands
-            if (iterType == 1 && iterationsDone == firstIters) {
-                iterType = 2;
-                iterationsDone = 0;
+            if (_iterType == 1 && _iterationsDone == _firstIters) {
+                _iterType = 2;
+                _iterationsDone = 0;
             }
 
             // This smooths some more and gets rid of a lot of the small islands
-            if (iterType == 2 && iterationsDone == secondIters) {
-                buildingBoard = false;
-                floodFill();
+            if (_iterType == 2 && _iterationsDone == _secondIters) {
+                _buildingBoard = false;
+                _floodFill();
             }
-            clock.restart();
+            _clock.restart();
         }
     }
 
     // If something causes a map regeneration, start one here
     // Putting it here helps to reduce recursion and stack usage is a lot of regenerations happen in a row
-    if (regenerate) {
+    if (_regenerate) {
         newBoard();
     }
 }
@@ -57,58 +57,58 @@ void Board::blankBoard(int windowSize, int tileSize) {
 
     // Initialize the board vector
     const int numTiles = windowSize / tileSize;
-    tiles = vector< vector<bool> > (numTiles, vector<bool>(numTiles, true));
+    _tiles = vector< vector<bool> > (numTiles, vector<bool>(numTiles, true));
 
     // Stores the tile size
-    this->tileSize = tileSize;
+    this->_tileSize = tileSize;
 
     // Makes sure iteration variables have the correct values
-    iterationsDone = 0;
-    buildingBoard = false;
-    iterType = 1;
-    regenerate = false;
+    _iterationsDone = 0;
+    _buildingBoard = false;
+    _iterType = 1;
+    _regenerate = false;
 
     // Cave building settings
     // This is used by the cellular automata
-    firstIters = 6;
-    secondIters = 12;
-    startChance = 0.45;
-    makeWall = 5;
-    bigArea = 2;
-    airPercent = 0.55;
+    _firstIters = 6;
+    _secondIters = 12;
+    _startChance = 0.45;
+    _makeWall = 5;
+    _bigArea = 2;
+    _airPercent = 0.55;
 }
 
 // Get the current board
 vector< vector<bool> > Board::getBoard() {
-    return tiles;
+    return _tiles;
 }
 
 // Is a board being generated?
 bool Board::isGenerating() {
-    return buildingBoard;
+    return _buildingBoard;
 }
 
 // Get how big a tile on the board is
 int Board::getTileSize() {
-    return tileSize;
+    return _tileSize;
 }
 
 // Starts a board generation
 void Board::newBoard () {
 
     // Don't build a board if one's being built
-    if (buildingBoard)
+    if (_buildingBoard)
         return;
 
     // Fill the board randomly
-    fillBoard();
+    _fillBoard();
 
     // Make sure all variables are set to generate a board
-    clock.restart();
-    iterationsDone = 0;
-    iterType = 1;
-    buildingBoard = true;
-    regenerate = false;
+    _clock.restart();
+    _iterationsDone = 0;
+    _iterType = 1;
+    _buildingBoard = true;
+    _regenerate = false;
 }
 
 // Checks collision at the given point
@@ -118,26 +118,26 @@ bool Board::isColliding(double x, double y) {
     int yC = y;
 
     // Make sure it's in the world
-    const int mapSize = (tiles.size()) - 1;
+    const int mapSize = (_tiles.size()) - 1;
     if (xC < 0 || yC < 0 || xC > mapSize || yC > mapSize) {
         return true;
     }
 
     // Return collision
-    return tiles.at(xC).at(yC);
+    return _tiles.at(xC).at(yC);
 }
 
 // Fills the board randomly based on start chance
-void Board::fillBoard() {
+void Board::_fillBoard() {
     // Figure out how big the old board was
-    const int numTiles = tiles.size();
+    const int numTiles = _tiles.size();
 
     // Fill a new board based on the start chance
     vector< vector<bool> > newBoard;
     for (int i = 0; i < numTiles; i++) {
         vector<bool> row;
         for (int j = 0; j < numTiles; j++) {
-            if (std::rand() < startChance * RAND_MAX) {
+            if (std::rand() < _startChance * RAND_MAX) {
                 row.push_back(true);
             }
             else {
@@ -148,16 +148,16 @@ void Board::fillBoard() {
     }
 
     // Save this to the board
-    tiles = newBoard;
+    _tiles = newBoard;
 
     // Fill in the walls
-    fillWalls();
+    _fillWalls();
 }
 
 // Performs a smoothing iteration on the board
 // This is done using cellular automata
-void Board::iterate() {
-    const int numTiles = tiles.size();
+void Board::_iterate() {
+    const int numTiles = _tiles.size();
 
     // Loop through all the tiles on the board
     vector< vector<bool> > newBoard;
@@ -165,38 +165,38 @@ void Board::iterate() {
         vector<bool> row;
         for (int j = 0; j < numTiles; j++) {
             // This calls the actual cellular automata function
-           row.push_back(isWall(i,j)) ;
+           row.push_back(_isWall(i, j)) ;
         }
         newBoard.push_back(row);
     };
 
     // Generating in a new variable means that the step operates on the whole board at once based on the previous board
-    tiles = newBoard;
+    _tiles = newBoard;
 
     // Make sure the walls exists
-    fillWalls();
+    _fillWalls();
 }
 
 // Is the tile a wall?
 // Handles the actual cellular automata
 // The rules are based on how many walls are in a close area to the tile in question
-bool Board::isWall(int x, int y) {
+bool Board::_isWall(int x, int y) {
     // First type of iteration, makes the general shape
-    if (iterType == 1) {
-        int oneStep = getNearbyWalls(x,y,1);
-        int twoStep = getNearbyWalls(x,y,2);
-        int threeStep = getNearbyWalls(x,y,3);
+    if (_iterType == 1) {
+        int oneStep = _getNearbyWalls(x, y, 1);
+        int twoStep = _getNearbyWalls(x, y, 2);
+        int threeStep = _getNearbyWalls(x, y, 3);
         if (twoStep > 18 || threeStep > 38)
             return true;
-        if ((oneStep >= makeWall || twoStep <= bigArea))
+        if ((oneStep >= _makeWall || twoStep <= _bigArea))
             return true;
         return false;
     }
 
     // Smooths the level a bit and helps to get rid of small islands of wall
-    else if (iterType == 2) {
-        int oneStep = getNearbyWalls(x,y,1);
-        if (oneStep >= makeWall)
+    else if (_iterType == 2) {
+        int oneStep = _getNearbyWalls(x, y, 1);
+        if (oneStep >= _makeWall)
             return true;
         return false;
     }
@@ -206,10 +206,10 @@ bool Board::isWall(int x, int y) {
 }
 
 // Count the number of surrounding tiles which are walls
-int Board::getNearbyWalls(int x, int y, int steps) {
+int Board::_getNearbyWalls(int x, int y, int steps) {
     // Get some variables, the -1 makes the loop easier
     int wallCount = 0;
-    const int mapSize = (tiles.size()) - 1;
+    const int mapSize = (_tiles.size()) - 1;
 
     // Loop through all possible tiles within the range, counting how many are walls
     for (int i = -1 * steps; i <= steps; i++) {
@@ -221,7 +221,7 @@ int Board::getNearbyWalls(int x, int y, int steps) {
                 wallCount++;
             }
             else {
-                wallCount += tiles.at(xT).at(yT);
+                wallCount += _tiles.at(xT).at(yT);
             }
         }
     }
@@ -230,30 +230,30 @@ int Board::getNearbyWalls(int x, int y, int steps) {
 }
 
 // Makes sure the entire map is surrounded by walls
-void Board::fillWalls() {
-    const int mapSize = (tiles.size()) - 1;
+void Board::_fillWalls() {
+    const int mapSize = (_tiles.size()) - 1;
     // Basically get the entire border of the map to wall
     for (int i = 0; i < mapSize; i++) {
-        tiles.at(0).at(i) = true;
-        tiles.at(i).at(0) = true;
-        tiles.at(mapSize).at(i) = true;
-        tiles.at(i).at(mapSize) = true;
+        _tiles.at(0).at(i) = true;
+        _tiles.at(i).at(0) = true;
+        _tiles.at(mapSize).at(i) = true;
+        _tiles.at(i).at(mapSize) = true;
     }
 }
 
 // Flood fills the entire map to make sure there's only one big area
-void Board::floodFill() {
+void Board::_floodFill() {
 
     // Flood fill bariables
     int numMadeAir = 0;
-    const int mapSize = tiles.size();
+    const int mapSize = _tiles.size();
     const int totalTiles = mapSize * mapSize;
 
     // Pick a random air tile to start the fill from
     vector<Tile> floodTiles;
     while (true) {
         int sX = rand() % mapSize, sY = rand() % mapSize;
-        if (!tiles.at(sX).at(sY)) {
+        if (!_tiles.at(sX).at(sY)) {
             floodTiles.emplace_back(sX, sY);
             break;
         }
@@ -278,7 +278,7 @@ void Board::floodFill() {
         }
 
         //  If the tile is air, make note of that and add adjacent tiles to the check list
-        bool tileVal = !tiles.at(xC).at(yC);
+        bool tileVal = !_tiles.at(xC).at(yC);
         if (tileVal) {
             // Prevents two tiles from bouncing back and forth with each other
             if (!floodFill.at(xC).at(yC))
@@ -296,10 +296,10 @@ void Board::floodFill() {
     // Make sure at least airPercent of the map is air
     // Otherwise trigger a map regeneration
     double pctAir = static_cast<double>(numMadeAir) / totalTiles;
-    if (pctAir <= airPercent) {
-        regenerate = true;
+    if (pctAir <= _airPercent) {
+        _regenerate = true;
     }
 
     // Store the new map into the tiles vector
-    tiles = floodFill;
+    _tiles = floodFill;
 }
