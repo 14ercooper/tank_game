@@ -7,6 +7,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "Board.h"
+#include <vector>
+#include "Weapon.h"
 
 // The core class for the game
 class Game {
@@ -15,10 +17,19 @@ public:
     // This makes main really easy to read, and is more OOP-based
     // Also means multiple games could be launched from a single main
     void run(int windowSize, int tileSize);
+
+    // Returns the current game object
     static Game* getGame();
 
+    // Add a weapon to the game
+    void addWeapon(Weapon& weapon);
+
 private:
+    // Stores the current game object
     static Game* _theGame;
+
+    // Stores a list of weapons currently in the game
+    std::vector<Weapon> weapons;
 };
 
 #endif //SFML_PRACTICE_GAME_H

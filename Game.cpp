@@ -18,6 +18,11 @@ Game* Game::getGame() {
     return _theGame;
 }
 
+// Add a weapon object to the game
+void Game::addWeapon(Weapon &weapon) {
+    weapons.push_back(weapon);
+}
+
 // The central game loop
 void Game::run(const int windowSize, const int tileSize) {
 
@@ -122,6 +127,11 @@ void Game::run(const int windowSize, const int tileSize) {
         // Player movement update
         if (player.isInitialized()) {
             player.move(keyMovingLeft, keyMovingRight, keyMovingUp, keyMovingDown);
+        }
+
+        // Weapons movement update
+        for (Weapon w : weapons) {
+            w.move();
         }
 
         // Clear the current display
