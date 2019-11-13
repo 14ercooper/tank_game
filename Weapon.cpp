@@ -3,6 +3,7 @@
 //
 
 #include <cmath>
+#include <iostream>
 
 #include "Weapon.h"
 #include "Game.h"
@@ -10,12 +11,22 @@
 // Blank constructor
 Weapon::Weapon() {
     _alive = false;
+    _posX = 0;
+    _posY = 0;
+    _dirX = 0;
+    _dirY = 0;
+    _color = sf::Color::Black;
+    _speed = 0;
 }
 
 // Constructor to set speed and color
 Weapon::Weapon(double speed, sf::Color color) {
     this->_speed = speed;
     this->_color = color;
+    _posX = 0;
+    _posY = 0;
+    _dirX = 0;
+    _dirY = 0;
     _alive = false;
 }
 
@@ -29,7 +40,7 @@ bool Weapon::isAlive() {
     return _alive;
 }
 
-// Returns the curret position of this weapon
+// Returns the current position of this weapon
 sf::Vector2f Weapon::getPosition() {
     return sf::Vector2f(_posX, _posY);
 }
@@ -59,13 +70,25 @@ void Weapon::init(double posX, double posY, double dirX, double dirY) {
 
 // Move the weapon
 void Weapon::move() {
+
     // Used to scale speed based on elapsed time
     double deltaTime = _clock.getElapsedTime().asMilliseconds() / 1000.0;
 
     // Move the weapon, with speed scaled by deltaTime
-    this->_posX += this->_dirX * _speed * deltaTime;
-    this->_posY += this->_dirY * _speed * deltaTime;
+    _posX += _dirX * _speed * deltaTime;
+    _posY += _dirY * _speed * deltaTime;
 
     // Reset the clock to make sure deltaTime is correct
     _clock.restart();
+
+    // Handle wall collisions
+    _isInWall();
+}
+
+// Deal with wall collisions
+void Weapon::_isInWall() {
+    // If the attack hits a wall, it depspawns
+    if (Game::getGame()->boardCollision(sf::Vector2f((_posX + 3) / Game::getGame()->getTileSize(), (_posY + 3) / Game::getGame()->getTileSize()))) {
+        _alive = false;
+    }
 }

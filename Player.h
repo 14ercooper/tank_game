@@ -24,6 +24,9 @@ public:
     bool isInitialized();
     sf::Vector2f getPos();
 
+    // Attack
+    void attack(sf::Vector2i mousePos);
+
 private:
     // Helper functions to make movement near walls feel better
     void _wallSlide();

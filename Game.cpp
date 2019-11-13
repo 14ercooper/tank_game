@@ -23,6 +23,16 @@ void Game::addWeapon(Weapon &weapon) {
     weapons.push_back(weapon);
 }
 
+// Check board collisions
+bool Game::boardCollision(sf::Vector2f pos) {
+    return _board.isColliding(pos.x, pos.y);
+}
+
+// Gets the size of a tile
+int Game::getTileSize() {
+    return _board.getTileSize();
+}
+
 // The central game loop
 void Game::run(const int windowSize, const int tileSize) {
 
@@ -34,9 +44,8 @@ void Game::run(const int windowSize, const int tileSize) {
     _theGame = this;
 
     // Create a new board object and initialize it to start
-    Board board;
-    board.blankBoard(windowSize, tileSize);
-    board.newBoard();
+    _board.blankBoard(windowSize, tileSize);
+    _board.newBoard();
 
     // Create a player object
     Player player;
@@ -47,6 +56,9 @@ void Game::run(const int windowSize, const int tileSize) {
     bool keyMovingRight = false;
     bool keyMovingUp = false;
     bool keyMovingDown = false;
+
+    // Rate limiting for clicks
+    sf::Clock timeSinceLastClick;
 
     // Central game loop
     while (window.isOpen()) {
@@ -65,7 +77,7 @@ void Game::run(const int windowSize, const int tileSize) {
 
                     // If pressed n, start regenerating the board
                     if (event.key.code == sf::Keyboard::N && !keyNewMap) {
-                        board.newBoard();
+                        _board.newBoard();
                         player = Player();
                         keyNewMap = true;
                     }
@@ -115,13 +127,20 @@ void Game::run(const int windowSize, const int tileSize) {
                     // No event to handle so no need to do anything
                     break;
             }
+        }
 
+        // Handle mouse inputs
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (timeSinceLastClick.getElapsedTime().asSeconds() >= 0.5) {
+                player.attack(sf::Mouse::getPosition(window));
+                timeSinceLastClick.restart();
+            }
         }
 
        // Poll the board for updates
-       board.pollBoard();
-        if (!player.isInitialized() && !board.isGenerating()) {
-            player = Player(board);
+       _board.pollBoard();
+        if (!player.isInitialized() && !_board.isGenerating()) {
+            player = Player(_board);
         }
 
         // Player movement update
@@ -130,15 +149,15 @@ void Game::run(const int windowSize, const int tileSize) {
         }
 
         // Weapons movement update
-        for (Weapon w : weapons) {
-            w.move();
+        for (int i = 0; i < weapons.size(); i++) {
+            weapons.at(i).move();
         }
 
         // Clear the current display
         window.clear(sf::Color::Black);
 
         // Get the board contents
-        vector< vector<bool> > tiles = board.getBoard();
+        vector< vector<bool> > tiles = _board.getBoard();
 
         // Create the square array based on the board contents
         vector<sf::RectangleShape> tileShapes;
@@ -173,6 +192,19 @@ void Game::run(const int windowSize, const int tileSize) {
             window.draw(player);
         }
 
+        // Draw the weapons
+        for (int i = 0; i < weapons.size(); i++) {
+            Weapon w = weapons.at(i);
+            if (!w.isAlive()) {
+                weapons.erase(weapons.begin() + i); // Might want to change weapons to a list rather than a vector since this is slow
+                continue;
+            }
+            sf::CircleShape cs;
+            cs.setFillColor(w.getColor());
+            cs.setRadius(3);
+            cs.setPosition(w.getPosition());
+            window.draw(cs);
+        }
 
         // Draw the window
         window.display();

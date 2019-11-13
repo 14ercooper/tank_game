@@ -3,8 +3,11 @@
 //
 
 #include <cmath>
+#include <iostream>
 
 #include "Player.h"
+#include "Weapon.h"
+#include "Game.h"
 
 // Blank player constructor for initialization purposes
 Player::Player () {
@@ -224,4 +227,27 @@ void Player::_cornerSlip() {
             }
         }
     }
+}
+
+// Handles the logic for attacking
+void Player::attack(const sf::Vector2i mousePos) {
+    // Create a weapon
+    Weapon w (400, sf::Color::Red);
+
+    // Set needed variables
+    double xPos, yPos, mouseX, mouseY, dirX, dirY;
+    xPos = this->getPos().x + _gameboard.getTileSize() / 2;
+    yPos = this->getPos().y + _gameboard.getTileSize() / 2;
+    mouseX = mousePos.x;
+    mouseY = mousePos.y;
+
+    // Calculate the direction
+    dirX = mouseX - xPos;
+    dirY = mouseY - yPos;
+
+    // Initialize the weapon
+    w.init(xPos, yPos, dirX, dirY);
+
+    // Spawn it into the world
+    Game::getGame()->addWeapon(w);
 }

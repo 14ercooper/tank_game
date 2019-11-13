@@ -35,6 +35,9 @@ protected:
     // Position and movement of this weapon
     double _posX, _posY, _dirX, _dirY;
 
+    // Check for wall collisions
+    void _isInWall();
+
     // Stores if this weapon is alive
     bool _alive;
 
