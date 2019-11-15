@@ -17,6 +17,8 @@ Weapon::Weapon() {
     _dirY = 0;
     _color = sf::Color::Black;
     _speed = 0;
+    _maxBounces = 0;
+    _bouncesDone = 0;
 }
 
 // Constructor to set speed and color
@@ -27,6 +29,8 @@ Weapon::Weapon(double speed, sf::Color color) {
     _posY = 0;
     _dirX = 0;
     _dirY = 0;
+    _maxBounces = 0;
+    _bouncesDone = 0;
     _alive = false;
 }
 
@@ -43,6 +47,11 @@ bool Weapon::isAlive() {
 // Returns the current position of this weapon
 sf::Vector2f Weapon::getPosition() {
     return sf::Vector2f(_posX, _posY);
+}
+
+// How many times can this weapon bounce
+void Weapon::setBounces(int bounces) {
+    _maxBounces = bounces;
 }
 
 // Initialize the weapon to be part of the game world
@@ -87,8 +96,29 @@ void Weapon::move() {
 
 // Deal with wall collisions
 void Weapon::_isInWall() {
-    // If the attack hits a wall, it depspawns
-    if (Game::getGame()->boardCollision(sf::Vector2f((_posX + 3) / Game::getGame()->getTileSize(), (_posY + 3) / Game::getGame()->getTileSize()))) {
-        _alive = false;
+    bool wallLeft = Game::getGame()->boardCollision(sf::Vector2f((_posX - 1) / Game::getGame()->getTileSize(), (_posY + 3) / Game::getGame()->getTileSize()));
+    bool wallRight = Game::getGame()->boardCollision(sf::Vector2f((_posX + 7) / Game::getGame()->getTileSize(), (_posY + 3) / Game::getGame()->getTileSize()));
+    bool wallUp = Game::getGame()->boardCollision(sf::Vector2f((_posX + 3) / Game::getGame()->getTileSize(), (_posY - 1) / Game::getGame()->getTileSize()));
+    bool wallDown = Game::getGame()->boardCollision(sf::Vector2f((_posX + 3) / Game::getGame()->getTileSize(), (_posY + 7) / Game::getGame()->getTileSize()));
+
+    // If the attack is in a wall, bounce if possible else despawn
+    if (wallLeft || wallRight || wallUp || wallDown) {
+        // Despawn (no more bounces)
+        if (_bouncesDone >= _maxBounces) {
+            _alive = false;
+            return;
+        }
+
+        // Handle bouncing
+        if (wallLeft || wallRight) {
+            _dirX *= -1;
+            _bouncesDone++;
+            _posX += _dirX;
+        }
+        if (wallUp || wallDown) {
+            _dirY *= -1;
+            _bouncesDone++;
+            _posY += _dirY;
+        }
     }
 }

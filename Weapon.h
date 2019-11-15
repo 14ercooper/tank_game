@@ -28,6 +28,9 @@ public:
     // Physics tick for weapon objects
     void move();
 
+    // Set how many times the weapon can bounce off walls
+    void setBounces(int bounces);
+
 protected:
     // How fast is the weapon?
     double _speed;
@@ -46,6 +49,9 @@ protected:
 
     // This clock is used to compute deltaTime
     sf::Clock _clock;
+
+    // Variables to help with bouncing
+    int _maxBounces, _bouncesDone;
 };
 
 #endif //SFML_PRACTICE_WEAPON_H

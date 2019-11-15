@@ -233,6 +233,7 @@ void Player::_cornerSlip() {
 void Player::attack(const sf::Vector2i mousePos) {
     // Create a weapon
     Weapon w (400, sf::Color::Red);
+    w.setBounces(2);
 
     // Set needed variables
     double xPos, yPos, mouseX, mouseY, dirX, dirY;
