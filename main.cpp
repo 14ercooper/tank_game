@@ -25,3 +25,13 @@ int main() {
     // Return a success
     return 0;
 }
+
+/* TODO
+ *
+ * Add enemies to the game (stupid immobile, immobile, mobile, fast mobile, green tank)
+ * Enemy spawning system (points = level * 5; enemies cost 1,2,5,10,25 resp. to spawn)
+ * Make weapons do damage to things
+ * Level system
+ * Title screen
+ * Save best level to file
+ */
