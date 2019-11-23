@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
 // Create a new enemy based on these attributes
 Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos) {
@@ -68,12 +69,14 @@ void Enemy::_attack(double angle) {
 
 // Check if a point is inside the player
 bool Enemy::isColliding(double x, double y, bool pixelPos) {
-    if (pixelPos) {
-        x /= Game::getGame()->getTileSize();
-        y /= Game::getGame()->getTileSize();
+    std::cout << x << ";" << _xPos << "\n";
+    int tileSize = Game::getGame()->getTileSize();
+    if (!pixelPos) {
+        x *= tileSize;
+        y *= tileSize;
     }
     bool collision = false;
-    if (x > _xPos - 0.1 && x < _xPos + 1.1 && y > _yPos - 0.1 && y < _yPos + 1.1) {
+    if (x > _xPos - (0.1 * tileSize) && x < _xPos + (1.1 * tileSize) && y > _yPos - (0.1 * tileSize) && y < _yPos + (1.1 * tileSize)) {
         collision = true;
     }
     return collision;

@@ -87,7 +87,6 @@ void Player::move(bool left, bool right, bool up, bool down) {
 
 // Perform a physics tick
 void Player::tickPhysics() {
-    std::cout << _x << "\n";
     // Enforce a minimum speed so the player actually stops
     if (_vx * _vx < 1)
         _vx = 0;

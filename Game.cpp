@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <iostream>
 
 #include "Game.h"
 #include "Board.h"
@@ -202,6 +203,35 @@ void Game::run(const int windowSize, const int tileSize) {
         // Draw the cave walls to the array
         for (sf::RectangleShape s : tileShapes) {
             window.draw(s);
+        }
+
+        // Check for weapons hitting things
+        for (int j = 0; j < _weapons.size(); j++) {
+            Weapon w = _weapons.at(j);
+            double xLoc = w.getPosition().x;
+            double yLoc = w.getPosition().y;
+            if (!w.damaging())
+                continue;
+            // Check player
+            if (player.isColliding(xLoc, yLoc,true)) {
+                player.die();
+            }
+
+            // Check enemies
+            for (int i = 0; i < _enemies.size(); i++) {
+                if (_enemies.at(i).isColliding(xLoc, yLoc, true)) {
+                    std::cout << "Enemy collision\n";
+                    _enemies.at(i).die();
+                    _weapons.erase(_weapons.begin() + j);
+                    j--; // Prevent skipping a weapon
+                }
+            }
+        }
+
+        // Check for a dead player and handle game over
+        if (player.isDead()) {
+            _board.newBoard();
+            player = Player();
         }
 
         // Draw the player
