@@ -69,7 +69,6 @@ void Enemy::_attack(double angle) {
 
 // Check if a point is inside the player
 bool Enemy::isColliding(double x, double y, bool pixelPos) {
-    std::cout << x << ";" << _xPos << "\n";
     int tileSize = Game::getGame()->getTileSize();
     if (!pixelPos) {
         x *= tileSize;
