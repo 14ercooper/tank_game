@@ -230,8 +230,17 @@ void Game::run(const int windowSize, const int tileSize) {
 
         // Check for a dead player and handle game over
         if (player.isDead()) {
+            _level = 1;
             _board.newBoard();
             player = Player();
+        }
+
+        // If there are no more enemies left, increment the level by 1
+        if(_enemies.empty() && !_board.isGenerating()) {
+            _level++;
+            _board.newBoard();
+            player = Player();
+
         }
 
         // Draw the player

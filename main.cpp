@@ -27,8 +27,6 @@ int main() {
 }
 
 /* TODO
- * Make weapons do damage to things
- * Level system
  * Title screen
  * Save best level to file
  */
