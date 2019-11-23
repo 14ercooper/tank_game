@@ -36,6 +36,7 @@ private:
     double _attackRate, _weaponSpeed, _xPos, _yPos;
     int _weaponBounces;
     bool _isAlive;
+    double _weaponDelay;
     sf::Color _color;
 
     // Used as an attack timer

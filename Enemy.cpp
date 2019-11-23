@@ -15,6 +15,7 @@
 Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos) {
     _attackRate = attackRate;
     _weaponSpeed = weaponSpeed;
+    _weaponDelay = attackRate * ((rand() % 1000) / 1000.0);
     _weaponBounces = weaponBounces;
     _color = color;
     _xPos = xPos * Game::getGame()->getTileSize();
@@ -44,8 +45,9 @@ bool Enemy::isAlive() {
 // Tick the AI
 void Enemy::move() {
     // Attack when needed
-    if (_clock.getElapsedTime().asSeconds() >= _attackRate) {
+    if (_clock.getElapsedTime().asSeconds() >= _attackRate + _weaponDelay) {
         _attack((rand() % 36000) / 100.0);
+        _weaponDelay = 0;
         _clock.restart();
     }
 }

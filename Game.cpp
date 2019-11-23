@@ -87,7 +87,7 @@ void Game::_updateBestLevel(int level) {
 void Game::run(const int windowSize, const int tileSize) {
 
     // Initialize the window
-    sf::RenderWindow window(sf::VideoMode(windowSize, windowSize), "Tile-Based Cave");
+    sf::RenderWindow window(sf::VideoMode(windowSize, windowSize), "If Wii Tanks Was Bullet Hell");
     window.setVerticalSyncEnabled(true);
 
     // Set the game
