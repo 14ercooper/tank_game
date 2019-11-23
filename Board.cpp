@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "Board.h"
+#include "Game.h"
 
 // I don't want to type vector all the time
 using std::vector;
@@ -39,6 +40,12 @@ void Board::pollBoard() {
             if (_iterType == 2 && _iterationsDone == _secondIters) {
                 _buildingBoard = false;
                 _floodFill();
+
+                // Spawn enemies
+                int points = Game::getGame()->getLevel() * 10;
+                while (points > 0) {
+                    _spawnEnemy(points);
+                }
             }
             _clock.restart();
         }
@@ -99,6 +106,9 @@ void Board::newBoard () {
     // Don't build a board if one's being built
     if (_buildingBoard)
         return;
+
+    // Reset the weapons and enemies from the game
+    Game::getGame()->resetAddedObjects();
 
     // Fill the board randomly
     _fillBoard();
@@ -302,4 +312,36 @@ void Board::_floodFill() {
 
     // Store the new map into the tiles vector
     _tiles = floodFill;
+}
+
+// Handles the spawning of enemies
+void Board::_spawnEnemy(int &points) {
+    // Where to spawn the enemy?
+    int xPos = -1, yPos = 1;
+    while (true) {
+        xPos = rand() % _tiles.at(0).size();
+        yPos = rand() % _tiles.size();
+        if (!isColliding(xPos, yPos)) {
+            break;
+        }
+    }
+
+    // Spawn an enemy
+    while (true) {
+        int type = rand() % 1;
+        switch (type) {
+            // Spawn the first type of enemy
+            case 0: {
+                if (points < 1)
+                    continue;
+                Enemy e(2, 200, 1, sf::Color::Yellow, xPos, yPos);
+                Game::getGame()->addEnemy(e);
+                points -= 1;
+                return;
+            }
+            // Skip spawning an enemy, but also doesn't change anything
+            default:
+                return;
+        }
+    }
 }

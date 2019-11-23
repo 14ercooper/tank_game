@@ -9,6 +9,7 @@
 #include "Board.h"
 #include <vector>
 #include "Weapon.h"
+#include "Enemy.h"
 
 // The core class for the game
 class Game {
@@ -21,8 +22,13 @@ public:
     // Returns the current game object
     static Game* getGame();
 
-    // Add a weapon to the game
+    // Add a weapon or enemy to the game
     void addWeapon(Weapon& weapon);
+    void addEnemy(Enemy& enemy);
+    void resetAddedObjects();
+
+    // Gets the level
+    int getLevel();
 
     // Checks for a collision with the board
     bool boardCollision(sf::Vector2f pos);
@@ -33,8 +39,12 @@ private:
     // Stores the current game object
     static Game* _theGame;
 
-    // Stores a list of weapons currently in the game
-    std::vector<Weapon> weapons;
+    // Stores a list of weapons and enemies currently in the game
+    std::vector<Weapon> _weapons;
+    std::vector<Enemy> _enemies;
+
+    // What level are we on?
+    int _level = 1;
 
     // The gameboard
     Board _board;

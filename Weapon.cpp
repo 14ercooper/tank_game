@@ -44,6 +44,11 @@ bool Weapon::isAlive() {
     return _alive;
 }
 
+// Can this weapon deal damage yet?
+bool Weapon::damaging() {
+    return _aliveTime.getElapsedTime().asSeconds() > 0.25;
+}
+
 // Returns the current position of this weapon
 sf::Vector2f Weapon::getPosition() {
     return sf::Vector2f(_posX, _posY);
@@ -75,6 +80,7 @@ void Weapon::init(double posX, double posY, double dirX, double dirY) {
 
     // Make sure deltaTime works
     _clock.restart();
+    _aliveTime.restart();
 }
 
 // Move the weapon

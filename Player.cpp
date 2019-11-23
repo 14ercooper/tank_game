@@ -87,6 +87,7 @@ void Player::move(bool left, bool right, bool up, bool down) {
 
 // Perform a physics tick
 void Player::tickPhysics() {
+    std::cout << _x << "\n";
     // Enforce a minimum speed so the player actually stops
     if (_vx * _vx < 1)
         _vx = 0;
@@ -251,4 +252,25 @@ void Player::attack(const sf::Vector2i mousePos) {
 
     // Spawn it into the world
     Game::getGame()->addWeapon(w);
+}
+
+// Check if a point is inside the player
+bool Player::isColliding(double x, double y, bool pixelPos) {
+    if (pixelPos) {
+        x /= Game::getGame()->getTileSize();
+        y /= Game::getGame()->getTileSize();
+    }
+    bool collision = false;
+    if (x > _x + 0.15 && x < _x + 0.85 && y > _y + 0.15 && y < _y + 0.85) {
+        collision = true;
+    }
+    return collision;
+}
+
+// Die
+void Player::die() {
+    _dead = true;
+}
+ bool Player::isDead() {
+    return _dead;
 }

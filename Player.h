@@ -27,6 +27,11 @@ public:
     // Attack
     void attack(sf::Vector2i mousePos);
 
+    // Check if a point inside the player, and a die function
+    bool isColliding(double x, double y, bool pixelPos);
+    void die();
+    bool isDead();
+
 private:
     // Helper functions to make movement near walls feel better
     void _wallSlide();
@@ -43,6 +48,9 @@ private:
 
     // Used to compute deltaTime
     sf::Clock _movementClock;
+
+    // Is the player dead?
+    bool _dead = false;
 };
 
 #endif //SFML_PRACTICE_PLAYER_H

@@ -74,6 +74,9 @@ private:
     // Otherwise a regneration is triggered, but this is rare and doesn't come near the maximum acceptable genration time
     void _floodFill();
 
+    // Handles the logic for spawning enemies into the game
+    void _spawnEnemy(int &points);
+
     // Cave generation constants, these determine the form of the playing field
     // They are the cellular automata parameters
     int _firstIters;

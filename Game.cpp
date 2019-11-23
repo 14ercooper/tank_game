@@ -20,7 +20,23 @@ Game* Game::getGame() {
 
 // Add a weapon object to the game
 void Game::addWeapon(Weapon &weapon) {
-    weapons.push_back(weapon);
+    _weapons.push_back(weapon);
+}
+
+// Add an enemy object to the game
+void Game::addEnemy(Enemy &enemy) {
+    _enemies.push_back(enemy);
+}
+
+// Remove all enemies and weapons from the game
+void Game::resetAddedObjects() {
+    _weapons.clear();
+    _enemies.clear();
+}
+
+// Returns the current level
+int Game::getLevel() {
+    return _level;
 }
 
 // Check board collisions
@@ -149,8 +165,13 @@ void Game::run(const int windowSize, const int tileSize) {
         }
 
         // Weapons movement update
-        for (int i = 0; i < weapons.size(); i++) {
-            weapons.at(i).move();
+        for (int i = 0; i < _weapons.size(); i++) {
+            _weapons.at(i).move();
+        }
+
+        // Enemies movement update
+        for (int i = 0; i < _enemies.size(); i++) {
+            _enemies.at(i).move();
         }
 
         // Clear the current display
@@ -193,10 +214,11 @@ void Game::run(const int windowSize, const int tileSize) {
         }
 
         // Draw the weapons
-        for (int i = 0; i < weapons.size(); i++) {
-            Weapon w = weapons.at(i);
+        for (int i = 0; i < _weapons.size(); i++) {
+            Weapon w = _weapons.at(i);
             if (!w.isAlive()) {
-                weapons.erase(weapons.begin() + i); // Might want to change weapons to a list rather than a vector since this is slow
+                _weapons.erase(_weapons.begin() + i); // Might want to change weapons to a list rather than a vector since this is slow
+                i--; // This stops us from skipping over a weapon
                 continue;
             }
             sf::CircleShape cs;
@@ -204,6 +226,20 @@ void Game::run(const int windowSize, const int tileSize) {
             cs.setRadius(3);
             cs.setPosition(w.getPosition());
             window.draw(cs);
+        }
+
+        // Draw the enemies
+        for (int i = 0; i < _enemies.size(); i++) {
+            Enemy e = _enemies.at(i);
+            if (!e.isAlive()) {
+                _enemies.erase(_enemies.begin() + i);
+                i--; // Same as weapons, don't want to skip an update
+                continue;
+            }
+            sf::RectangleShape rs (sf::Vector2f(tileSize, tileSize));
+            rs.setPosition(e.getPosition());
+            rs.setFillColor(e.getColor());
+            window.draw(rs);
         }
 
         // Draw the window

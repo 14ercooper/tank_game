@@ -31,6 +31,9 @@ public:
     // Set how many times the weapon can bounce off walls
     void setBounces(int bounces);
 
+    // Can this deal damage?
+    bool damaging();
+
 protected:
     // How fast is the weapon?
     double _speed;
@@ -49,6 +52,9 @@ protected:
 
     // This clock is used to compute deltaTime
     sf::Clock _clock;
+
+    // This clock is the time the weapon has existed
+    sf::Clock _aliveTime;
 
     // Variables to help with bouncing
     int _maxBounces, _bouncesDone;
