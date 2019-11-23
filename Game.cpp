@@ -220,7 +220,6 @@ void Game::run(const int windowSize, const int tileSize) {
             // Check enemies
             for (int i = 0; i < _enemies.size(); i++) {
                 if (_enemies.at(i).isColliding(xLoc, yLoc, true)) {
-                    std::cout << "Enemy collision\n";
                     _enemies.at(i).die();
                     _weapons.erase(_weapons.begin() + j);
                     j--; // Prevent skipping a weapon
