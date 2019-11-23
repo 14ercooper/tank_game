@@ -25,8 +25,3 @@ int main() {
     // Return a success
     return 0;
 }
-
-/* TODO
- * Title screen
- * Save best level to file
- */

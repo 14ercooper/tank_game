@@ -45,6 +45,14 @@ private:
 
     // What level are we on?
     int _level = 1;
+    int _bestLevel;
+
+    // Should we show the title screen?
+    bool _gameRunning = false;
+
+    // Gets and updates the best level in the file
+    void _getBestLevel();
+    void _updateBestLevel(int level);
 
     // The gameboard
     Board _board;
