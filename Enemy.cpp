@@ -12,7 +12,7 @@
 #include <iostream>
 
 // Create a new enemy based on these attributes
-Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos) {
+Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos, double movementSpeed, bool smartAim) {
     _attackRate = attackRate;
     _weaponSpeed = weaponSpeed;
     _weaponDelay = attackRate * ((rand() % 1000) / 1000.0);
@@ -21,7 +21,10 @@ Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color
     _xPos = xPos * Game::getGame()->getTileSize();
     _yPos = yPos * Game::getGame()->getTileSize();
     _isAlive = true;
+    _movementSpeed = movementSpeed;
+    _smartAim = smartAim;
     _clock.restart();
+    _deltaClock.restart();
 }
 
 // Default constructor hidden and empty
@@ -46,10 +49,17 @@ bool Enemy::isAlive() {
 void Enemy::move() {
     // Attack when needed
     if (_clock.getElapsedTime().asSeconds() >= _attackRate + _weaponDelay) {
-        _attack((rand() % 36000) / 100.0);
+        _attack(_aimAtPlayer());
         _weaponDelay = 0;
         _clock.restart();
     }
+
+    // Move
+    double deltaTime = _deltaClock.getElapsedTime().asSeconds();
+    sf::Vector2f movement = _getMovement();
+    _xPos += movement.x * deltaTime * _movementSpeed;
+    _yPos += movement.y * deltaTime * _movementSpeed;
+    _deltaClock.restart();
 }
 
 // Attack function
@@ -86,4 +96,20 @@ bool Enemy::isColliding(double x, double y, bool pixelPos) {
 // Die
 void Enemy::die() {
     _isAlive = false;
+}
+
+// Get the direction to shoot to hit the player
+double Enemy::_aimAtPlayer() {
+    if (_smartAim) { // Don't do the math if it isn't needed
+        // TODO implement raycasting with wall bounces to be able to aim at the player using wall bounces
+    }
+    return (rand() % 36000) / 100.0;
+}
+
+// What direction to move?
+sf::Vector2f Enemy::_getMovement() {
+    if (_movementSpeed > 0.01) { // Don't do the math if it isn't needed
+        // TODO implement pathfinding algorithm
+    }
+    return sf::Vector2f(0,0);
 }

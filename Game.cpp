@@ -347,7 +347,7 @@ void Game::run(const int windowSize, const int tileSize) {
             text.setFillColor(sf::Color::White);
 
             // Draw text with instructions and whatnot
-            std::string textToDraw;
+            std::string textToDraw = "";
             textToDraw += "If Wii Tanks Was Bullet Hell";
             textToDraw += "\nUse WASD to move, click to shoot";
             textToDraw += "\nPress 'n' to begin a game";

@@ -11,7 +11,7 @@
 class Enemy {
 public:
     // Create a new enemy of the stupid variety
-    Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos);
+    Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos, double movementSpeed, bool smartAim);
 
     // Basically trigger the AI
     void move();
@@ -32,15 +32,24 @@ private:
     // Attack/spawn a weapon
     void _attack(double angle);
 
+    // Get attack angle
+    double _aimAtPlayer();
+
+    // Get movement direction
+    sf::Vector2f _getMovement();
+
     // Enemy variables
-    double _attackRate, _weaponSpeed, _xPos, _yPos;
+    double _attackRate, _weaponSpeed, _xPos, _yPos, _movementSpeed;
     int _weaponBounces;
-    bool _isAlive;
+    bool _isAlive, _smartAim;
     double _weaponDelay;
     sf::Color _color;
 
     // Used as an attack timer
     sf::Clock _clock;
+
+    // Used to compute deltaTime
+    sf::Clock _deltaClock;
 };
 
 #endif //SFML_PRACTICE_ENEMY_H

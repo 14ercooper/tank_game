@@ -328,15 +328,51 @@ void Board::_spawnEnemy(int &points) {
 
     // Spawn an enemy
     while (true) {
-        int type = rand() % 1;
+        int type = rand() % 5;
         switch (type) {
-            // Spawn the first type of enemy
+            // Spawn a stupid stationary enemy
             case 0: {
                 if (points < 1)
                     continue;
-                Enemy e(2, 200, 1, sf::Color::Yellow, xPos, yPos);
+                Enemy e(2, 200, 1, sf::Color::Yellow, xPos, yPos, 0, false);
                 Game::getGame()->addEnemy(e);
                 points -= 1;
+                return;
+            }
+            // Spawn smart stationary enemy
+            case 1: {
+                if (points < 3)
+                    continue;
+                Enemy e(2.5, 200, 1, sf::Color::Magenta, xPos, yPos, 0, true);
+                Game::getGame()->addEnemy(e);
+                points -= 3;
+                return;
+            }
+            // Green tank, the player will probably die
+            case 2: {
+                if (points < 15)
+                    continue;
+                Enemy e(1.5, 800, 4, sf::Color::Cyan, xPos, yPos, 0, true);
+                Game::getGame()->addEnemy(e);
+                points -= 15;
+                return;
+            }
+            // Mobile, slow, smart
+            case 3: {
+                if (points < 5)
+                    continue;
+                Enemy e(5, 200, 2, sf::Color::White, xPos, yPos, 1.5 * Game::getGame()->getTileSize(), true);
+                Game::getGame()->addEnemy(e);
+                points -= 5;
+                return;
+            }
+            // Mobile, faster and smart
+            case 4: {
+                if (points < 9)
+                    continue;
+                Enemy e(3, 350, 3, sf::Color::Black, xPos, yPos, 3.5 * Game::getGame()->getTileSize(), true);
+                Game::getGame()->addEnemy(e);
+                points -= 9;
                 return;
             }
             // Skip spawning an enemy, but also doesn't change anything
