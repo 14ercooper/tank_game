@@ -36,7 +36,7 @@ private:
     double _aimAtPlayer();
 
     // Get movement direction
-    sf::Vector2f _getMovement();
+    void _getMovement();
 
     // Enemy variables
     double _attackRate, _weaponSpeed, _xPos, _yPos, _movementSpeed;
@@ -50,6 +50,12 @@ private:
 
     // Used to compute deltaTime
     sf::Clock _deltaClock;
+
+    // Don't calculate movement too often
+    sf::Clock _movementClock;
+    double _movementOffset;
+    bool _strafeClockwise;
+    sf::Vector2f _movement;
 };
 
 #endif //SFML_PRACTICE_ENEMY_H

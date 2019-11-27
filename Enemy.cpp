@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 // Create a new enemy based on these attributes
 Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos, double movementSpeed, bool smartAim) {
@@ -23,8 +24,11 @@ Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color
     _isAlive = true;
     _movementSpeed = movementSpeed;
     _smartAim = smartAim;
+    _movementOffset = 0.5 * ((rand() % 1000) / 1000.0);
+    _strafeClockwise = rand() % 2;
     _clock.restart();
     _deltaClock.restart();
+    _movementClock.restart();
 }
 
 // Default constructor hidden and empty
@@ -56,9 +60,9 @@ void Enemy::move() {
 
     // Move
     double deltaTime = _deltaClock.getElapsedTime().asSeconds();
-    sf::Vector2f movement = _getMovement();
-    _xPos += movement.x * deltaTime * _movementSpeed;
-    _yPos += movement.y * deltaTime * _movementSpeed;
+    _getMovement();
+    _xPos += _movement.x * deltaTime * _movementSpeed;
+    _yPos += _movement.y * deltaTime * _movementSpeed;
     _deltaClock.restart();
 }
 
@@ -107,9 +111,49 @@ double Enemy::_aimAtPlayer() {
 }
 
 // What direction to move?
-sf::Vector2f Enemy::_getMovement() {
+void Enemy::_getMovement() {
     if (_movementSpeed > 0.01) { // Don't do the math if it isn't needed
-        // TODO implement pathfinding algorithm
+        // Start by not recalculating the path every frame
+        if (_movementClock.getElapsedTime().asSeconds() > 0.5 + _movementOffset) {
+            _movementClock.restart();
+
+            // Grab the player location and board reference
+            Game* game = Game::getGame();
+            sf::Vector2f playerPos = game->getPlayer()->getPos();
+            double thisX = _xPos;
+            double thisY = _yPos;
+            double distToPlayer = sqrt(pow(thisX - playerPos.x, 2) + pow(thisY - playerPos.y, 2));
+
+            // Case 1: too close to player so "panic" and run directly away
+            if (distToPlayer < 8.0 * game->getTileSize()) {
+                // Return the direction to run in (if possible, otherwise it'll bounce down to the next case
+                sf::Vector2f fleeDir;
+                fleeDir.x = thisX - playerPos.x;
+                fleeDir.y = thisY - playerPos.y;
+                fleeDir.x /= sqrt(pow(fleeDir.x, 2) + pow(fleeDir.y, 2)); // Normalize vector
+                fleeDir.y /= sqrt(pow(fleeDir.x, 2) + pow(fleeDir.y, 2));
+
+                // Avoid moving into a wall
+                _movement = fleeDir;
+            }
+
+            // Case 2: Too far from player so run toward them
+            else if (distToPlayer > 16.0 * game->getTileSize()) {
+                // Move toward the player
+                sf::Vector2f moveDir;
+                moveDir.x = playerPos.x - thisX;
+                moveDir.y = playerPos.y - thisY;
+                moveDir.x /= sqrt(pow(moveDir.x, 2) + pow(moveDir.y, 2)); // Normalize vector
+                moveDir.y /= sqrt(pow(moveDir.x, 2) + pow(moveDir.y, 2));
+
+                // Avoid moving into a wall
+                _movement = moveDir;
+            }
+
+            // Case 3: Good distance from player so stay put
+            else {
+                _movement = sf::Vector2f(0,0);
+            }
+        }
     }
-    return sf::Vector2f(0,0);
 }

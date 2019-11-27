@@ -254,7 +254,7 @@ void Board::_fillWalls() {
 // Flood fills the entire map to make sure there's only one big area
 void Board::_floodFill() {
 
-    // Flood fill bariables
+    // Flood fill variables
     int numMadeAir = 0;
     const int mapSize = _tiles.size();
     const int totalTiles = mapSize * mapSize;

@@ -20,6 +20,11 @@ Game* Game::getGame() {
     return _theGame;
 }
 
+// Return the player
+Player* Game::getPlayer() {
+    return &_player;
+}
+
 // Add a weapon object to the game
 void Game::addWeapon(Weapon &weapon) {
     _weapons.push_back(weapon);
@@ -39,6 +44,14 @@ void Game::resetAddedObjects() {
 // Returns the current level
 int Game::getLevel() {
     return _level;
+}
+
+// Returns board size
+int Game::getNumTilesX() {
+    return _board.getBoard().size();
+}
+int Game::getNumTilesY() {
+    return _board.getBoard().at(0).size();
 }
 
 // Check board collisions
@@ -97,9 +110,6 @@ void Game::run(const int windowSize, const int tileSize) {
     _board.blankBoard(windowSize, tileSize);
     _board.newBoard();
 
-    // Create a player object
-    Player player;
-
     // Has a game been played yet?
     bool hasPlayedGame = false;
 
@@ -143,7 +153,7 @@ void Game::run(const int windowSize, const int tileSize) {
                     if (event.key.code == sf::Keyboard::N && !keyNewMap && !_gameRunning) {
                         _level = 1;
                         _board.newBoard();
-                        player = Player();
+                        _player = Player();
                         keyNewMap = true;
                         _gameRunning = true;
                         hasPlayedGame = true;
@@ -201,20 +211,20 @@ void Game::run(const int windowSize, const int tileSize) {
             // Handle mouse inputs
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 if (timeSinceLastClick.getElapsedTime().asSeconds() >= 0.5) {
-                    player.attack(sf::Mouse::getPosition(window));
+                    _player.attack(sf::Mouse::getPosition(window));
                     timeSinceLastClick.restart();
                 }
             }
 
             // Poll the board for updates
             _board.pollBoard();
-            if (!player.isInitialized() && !_board.isGenerating()) {
-                player = Player(_board);
+            if (!_player.isInitialized() && !_board.isGenerating()) {
+                _player = Player(_board);
             }
 
             // Player movement update
-            if (player.isInitialized()) {
-                player.move(keyMovingLeft, keyMovingRight, keyMovingUp, keyMovingDown);
+            if (_player.isInitialized()) {
+                _player.move(keyMovingLeft, keyMovingRight, keyMovingUp, keyMovingDown);
             }
 
             // Weapons movement update
@@ -264,8 +274,8 @@ void Game::run(const int windowSize, const int tileSize) {
                 if (!w.damaging())
                     continue;
                 // Check player
-                if (player.isColliding(xLoc, yLoc, true)) {
-                    player.die();
+                if (_player.isColliding(xLoc, yLoc, true)) {
+                    _player.die();
                 }
 
                 // Check enemies
@@ -279,7 +289,7 @@ void Game::run(const int windowSize, const int tileSize) {
             }
 
             // Check for a dead player and handle game over
-            if (player.isDead()) {
+            if (_player.isDead()) {
                 _updateBestLevel(_level);
                 _gameRunning = false;
             }
@@ -288,13 +298,13 @@ void Game::run(const int windowSize, const int tileSize) {
             if (_enemies.empty() && !_board.isGenerating()) {
                 _level++;
                 _board.newBoard();
-                player = Player();
+                _player = Player();
 
             }
 
             // Draw the player
-            if (player.isInitialized()) {
-                sf::Vector2f playerPos = player.getPos();
+            if (_player.isInitialized()) {
+                sf::Vector2f playerPos = _player.getPos();
                 sf::RectangleShape player(sf::Vector2f(tileSize, tileSize));
                 player.setPosition(playerPos);
                 player.setFillColor(sf::Color::Red);

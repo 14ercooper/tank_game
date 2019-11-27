@@ -10,6 +10,7 @@
 #include <vector>
 #include "Weapon.h"
 #include "Enemy.h"
+#include "Player.h"
 
 // The core class for the game
 class Game {
@@ -21,6 +22,9 @@ public:
 
     // Returns the current game object
     static Game* getGame();
+    Player* getPlayer();
+    int getNumTilesX();
+    int getNumTilesY();
 
     // Add a weapon or enemy to the game
     void addWeapon(Weapon& weapon);
@@ -46,6 +50,9 @@ private:
     // What level are we on?
     int _level = 1;
     int _bestLevel;
+
+    // Player object
+    Player _player;
 
     // Should we show the title screen?
     bool _gameRunning = false;
