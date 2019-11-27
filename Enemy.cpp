@@ -216,6 +216,7 @@ void Enemy::_getMovement() {
 
             // Case 1: too close to player so "panic" and run directly away
             if (distToPlayer < 8.0 * game->getTileSize()) {
+                std::cout << "Case 1\n";
                 // Return the direction to run in (if possible, otherwise it'll bounce down to the next case
                 sf::Vector2f fleeDir;
                 fleeDir.x = thisX - playerPos.x;
@@ -226,10 +227,12 @@ void Enemy::_getMovement() {
                 // Avoid moving into a wall
                 _speedMult = 1.5;
                 _movement = fleeDir;
+                return;
             }
 
             // Case 2: Too far from player so run toward them
             else if (distToPlayer > 16.0 * game->getTileSize()) {
+                std::cout << "Case 2\n";
                 // Move toward the player
                 sf::Vector2f moveDir;
                 moveDir.x = playerPos.x - thisX;
@@ -239,13 +242,17 @@ void Enemy::_getMovement() {
 
                 // Avoid moving into a wall
                 _movement = moveDir;
+                return;
             }
 
             // Case 3: Good distance from player so stay put
             else {
+                std::cout << "Case 3\n";
                 _movement = sf::Vector2f(0,0);
+                return;
             }
         }
+        return;
     }
     _movement = sf::Vector2f(0,0);
 }

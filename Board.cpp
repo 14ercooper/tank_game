@@ -352,7 +352,7 @@ void Board::_spawnEnemy(int &points) {
             case 2: {
                 if (points < 15)
                     continue;
-                Enemy e(1.5, 800, 4, sf::Color::Cyan, xPos, yPos, 0, true);
+                Enemy e(1.5, 500, 4, sf::Color::Cyan, xPos, yPos, 0, true);
                 Game::getGame()->addEnemy(e);
                 points -= 15;
                 return;
