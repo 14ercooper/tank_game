@@ -194,8 +194,6 @@ double Enemy::_aimAtPlayer() {
             }
         }
 
-        std::cout << sqrt(bestPlayerDist) / 16 << "\n";
-
         return bestAngle + (bestAngleDecimal / 100.0);
     }
     // If it doesn't use smart aim, shoot randomly
