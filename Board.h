@@ -21,16 +21,16 @@ public:
     void newBoard();
 
     // Poll the current state of the board
-    bool isGenerating();
+    [[nodiscard]] bool isGenerating() const;
 
     // Checks if a wall is occupying the given location
-    bool isColliding (double x, double y);
+    [[nodiscard]] bool isColliding (double x, double y) const;
 
     // Returns a reference to this board
-    std::vector< std::vector<bool> > getBoard();
+    [[nodiscard]] std::vector< std::vector<bool> > getBoard() const;
 
     // Gets the size of a tile on this board
-    int getTileSize();
+    [[nodiscard]] int getTileSize() const;
 
 private:
     // Actually stores the board
@@ -59,11 +59,11 @@ private:
     void _iterate();
 
     // Is there a wall here?
-    bool _isWall(int x, int y);
+    [[nodiscard]] bool _isWall(int x, int y) const;
 
     // Gets the number of walls with steps of the wall
     // 8-directional steps (diagonal counts as a step as well)
-    int _getNearbyWalls(int x, int y, int steps);
+    [[nodiscard]] int _getNearbyWalls(int x, int y, int steps) const;
 
     // Makes sure the board is surrounded by walls
     void _fillWalls();

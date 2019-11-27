@@ -60,7 +60,7 @@ void Board::pollBoard() {
 
 
 // Replaces the current board with a blank board and initializes the board class with variables
-void Board::blankBoard(int windowSize, int tileSize) {
+void Board::blankBoard(const int windowSize, const int tileSize) {
 
     // Initialize the board vector
     const int numTiles = windowSize / tileSize;
@@ -86,17 +86,17 @@ void Board::blankBoard(int windowSize, int tileSize) {
 }
 
 // Get the current board
-vector< vector<bool> > Board::getBoard() {
+vector< vector<bool> > Board::getBoard() const {
     return _tiles;
 }
 
 // Is a board being generated?
-bool Board::isGenerating() {
+bool Board::isGenerating() const {
     return _buildingBoard;
 }
 
 // Get how big a tile on the board is
-int Board::getTileSize() {
+int Board::getTileSize() const {
     return _tileSize;
 }
 
@@ -122,7 +122,7 @@ void Board::newBoard () {
 }
 
 // Checks collision at the given point
-bool Board::isColliding(double x, double y) {
+bool Board::isColliding(const double x, const double y) const {
     // Chop off the decimal to get the tile to check in the vector
     int xC = x;
     int yC = y;
@@ -147,12 +147,7 @@ void Board::_fillBoard() {
     for (int i = 0; i < numTiles; i++) {
         vector<bool> row;
         for (int j = 0; j < numTiles; j++) {
-            if (std::rand() < _startChance * RAND_MAX) {
-                row.push_back(true);
-            }
-            else {
-                row.push_back(false);
-            }
+            row.push_back(std::rand() < _startChance * RAND_MAX);
         }
         newBoard.push_back(row);
     }
@@ -190,7 +185,7 @@ void Board::_iterate() {
 // Is the tile a wall?
 // Handles the actual cellular automata
 // The rules are based on how many walls are in a close area to the tile in question
-bool Board::_isWall(int x, int y) {
+bool Board::_isWall(int x, int y) const {
     // First type of iteration, makes the general shape
     if (_iterType == 1) {
         int oneStep = _getNearbyWalls(x, y, 1);
@@ -198,17 +193,13 @@ bool Board::_isWall(int x, int y) {
         int threeStep = _getNearbyWalls(x, y, 3);
         if (twoStep > 18 || threeStep > 38)
             return true;
-        if ((oneStep >= _makeWall || twoStep <= _bigArea))
-            return true;
-        return false;
+        return oneStep >= _makeWall || twoStep <= _bigArea;
     }
 
     // Smooths the level a bit and helps to get rid of small islands of wall
     else if (_iterType == 2) {
         int oneStep = _getNearbyWalls(x, y, 1);
-        if (oneStep >= _makeWall)
-            return true;
-        return false;
+        return oneStep >= _makeWall;
     }
 
     // Wasn't defined, so just call it air
@@ -216,7 +207,7 @@ bool Board::_isWall(int x, int y) {
 }
 
 // Count the number of surrounding tiles which are walls
-int Board::_getNearbyWalls(int x, int y, int steps) {
+int Board::_getNearbyWalls(int x, int y, int steps) const {
     // Get some variables, the -1 makes the loop easier
     int wallCount = 0;
     const int mapSize = (_tiles.size()) - 1;
