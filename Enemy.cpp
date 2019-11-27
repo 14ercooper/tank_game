@@ -105,7 +105,98 @@ void Enemy::die() {
 // Get the direction to shoot to hit the player
 double Enemy::_aimAtPlayer() {
     if (_smartAim) { // Don't do the math if it isn't needed
-        // TODO implement raycasting with wall bounces to be able to aim at the player using wall bounces
+        Game* game = Game::getGame();
+        sf::Vector2f playerPos = game->getPlayer()->getPos();
+
+        // Test 360 angles to see which is the best
+        double bestAngle = -1;
+        double bestPlayerDist = 99999999;
+        for (int angle = 0; angle < 360; angle++) {
+            // Simulate a bullet
+            int bouncesUsed = 0;
+            double dirX = cos(angle * 1.0); // Make sure these are doubles
+            double dirY = sin(angle * 1.0);
+            double posX = _xPos;
+            double posY = _yPos;
+            int minPlayerDist = 99999999;
+            while (bouncesUsed <= _weaponBounces) {
+                posX += dirX * 2;
+                posY += dirY * 2;
+
+                // Wall bouncing
+                bool wallLeft = Game::getGame()->boardCollision(sf::Vector2f((posX - 1) / Game::getGame()->getTileSize(), (posY + 3) / Game::getGame()->getTileSize()));
+                bool wallRight = Game::getGame()->boardCollision(sf::Vector2f((posX + 7) / Game::getGame()->getTileSize(), (posY + 3) / Game::getGame()->getTileSize()));
+                bool wallUp = Game::getGame()->boardCollision(sf::Vector2f((posX + 3) / Game::getGame()->getTileSize(), (posY - 1) / Game::getGame()->getTileSize()));
+                bool wallDown = Game::getGame()->boardCollision(sf::Vector2f((posX + 3) / Game::getGame()->getTileSize(), (posY + 7) / Game::getGame()->getTileSize()));
+                if (wallLeft || wallRight) {
+                    dirX *= -1;
+                    bouncesUsed++;
+                    posX += dirX;
+                }
+                if (wallUp || wallDown) {
+                    dirY *= -1;
+                    bouncesUsed++;
+                    posY += dirY;
+                }
+
+                // Update distance to player
+                double playerDist = pow(posX - playerPos.x, 2) + pow(posY - playerPos.y, 2);
+                if (playerDist < minPlayerDist)
+                    minPlayerDist = playerDist;
+            }
+            // Update best angle if needed
+            if (minPlayerDist < bestPlayerDist) {
+                bestPlayerDist = minPlayerDist;
+                bestAngle = angle;
+            }
+        }
+
+        // Really hone in on sniping the player
+        double bestAngleDecimal = -1;
+        bestPlayerDist = 99999999;
+        for (int angle = -50; angle < 50; angle++) {
+            // Simulate a bullet
+            int bouncesUsed = 0;
+            double dirX = cos((bestAngle + (angle / 100.0)) * 1.0); // Make sure these are doubles
+            double dirY = sin((bestAngle + (angle / 100.0)) * 1.0);
+            double posX = _xPos;
+            double posY = _yPos;
+            int minPlayerDist = 99999999;
+            while (bouncesUsed <= _weaponBounces) {
+                posX += dirX * 2;
+                posY += dirY * 2;
+
+                // Wall bouncing
+                bool wallLeft = Game::getGame()->boardCollision(sf::Vector2f((posX - 1) / Game::getGame()->getTileSize(), (posY + 3) / Game::getGame()->getTileSize()));
+                bool wallRight = Game::getGame()->boardCollision(sf::Vector2f((posX + 7) / Game::getGame()->getTileSize(), (posY + 3) / Game::getGame()->getTileSize()));
+                bool wallUp = Game::getGame()->boardCollision(sf::Vector2f((posX + 3) / Game::getGame()->getTileSize(), (posY - 1) / Game::getGame()->getTileSize()));
+                bool wallDown = Game::getGame()->boardCollision(sf::Vector2f((posX + 3) / Game::getGame()->getTileSize(), (posY + 7) / Game::getGame()->getTileSize()));
+                if (wallLeft || wallRight) {
+                    dirX *= -1;
+                    bouncesUsed++;
+                    posX += dirX;
+                }
+                if (wallUp || wallDown) {
+                    dirY *= -1;
+                    bouncesUsed++;
+                    posY += dirY;
+                }
+
+                // Update distance to player
+                double playerDist = pow(posX - playerPos.x, 2) + pow(posY - playerPos.y, 2);
+                if (playerDist < minPlayerDist)
+                    minPlayerDist = playerDist;
+            }
+            // Update best angle if needed
+            if (minPlayerDist < bestPlayerDist) {
+                bestPlayerDist = minPlayerDist;
+                bestAngleDecimal = angle;
+            }
+        }
+
+        std::cout << sqrt(bestPlayerDist) / 16 << "\n";
+
+        return bestAngle + (bestAngleDecimal / 100.0);
     }
     // If it doesn't use smart aim, shoot randomly
     return (rand() % 36000) / 100.0;
