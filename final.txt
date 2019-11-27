@@ -1,0 +1,46 @@
+Logan Cooper, CSCI 261 Section A
+Project Title: Wii Tanks Ghost Bullet Hell
+
+Problem Description:
+Make a video game using SFML, with gameplay similar to Wii Tanks; but with a lot more enemies (hence bullet hell) who can also go through walls (hence the ghosts). The player should be able to move around the arena and shoot at the ghosts, while the ghosts also move around and attempt to kill the player. Everything has a single health, so making a mistake is severely punished. There are a handful of different types of ghosts, which vary in movement speed (if they move at all), how fast the bullets they shoot are, and if they are smart enough to aim at the player or just shoot randomly. Levels are randomly generated on a grid, with the player and ghost spawn locations randomly selected as well. The game keeps track of your best level using a save file on disk, which it will create if it doesn't already exist. Bullets also have the ability to bounce off walls a handful of times, varying between the player and each type of enemy. There is no end to the game, the goal is to get as far as possible before dying (my personal record is level 9 before a cyan ghost sniped me).
+
+Program Documentation:
+This program needs to be built using SFML.
+All controls are provided in-game, though here is a quick run-down:
+	WASD to move the player
+	Left click to shoot a bullet at the click location
+	N to start a new game from the title screen
+Stuff I wish I would have added if I had more time, and could be used to extend the program:
+	Textures for the walls/floor/player/ghosts - Likely using SFML to load the textures and then coloring them based on the enemy type
+	Audio - Some form of music, likely using SFML to load and play
+	Actual title screen - Again, loading an image using SFML and displaying it would be nice
+	Customizable level sizes - The game class is built around letting you specify level sizes and tile sizes, so just get user input and pass it to a new game instance would likely work
+	Better pathfinding - The enemies like to just hang out in walls. Sure, they are ghosts, but maybe just passing through walls rather than stopping in them. Probably just have them "run" more from the player if they stop moving and are still in a wall
+	Balance the game better - Tweak the enemy variables a bit. Sure, they are supposed to be hard, but some of then (like cyan) are borderline unfair to the player
+	Optimize the game - There are a lot of sections that use while loops and vectors or nested for loop or similar, which are quite slow. Could go through and improve a handful of these bits of code.
+	Add bosses - Maybe every 5 or 10 levels add a boss enemy who can take multiple hits, attack with multiple bullets, spawn new enemies, etc.
+	More level variety - All levels are made using the same generator. Maybe add a few more types of generators to the game
+	Better player collision - The player can get about halfway into walls using corners. Maybe improve the collision detection to help keep this from happening
+	Screenshake/hit effects - Add some effects like screenshake or a quick pause of the game for when a hit lands on an enemy or the player. Likely do this by shifting things slightly during draw calls or skipping redrawing the game for a few frames in the game loop.
+	Death effects - Add an animated sprite that plays when the player or an enemy die; likely using SFML
+
+Tests:
+These don't fit perfectly into the types of tests we normally have, but the game 
+	1) Every time the player presses 'n' on the title screen, a new level layout with different enemy layouts gets generated
+	2) Defeating all enemies in a level loads a new, harder level for the player to play
+	3) The game remembers your best level, and will remind you every time you're on the title screen
+	4) The player can move around the world, while being stopped by walls, and can shoot bullets toward where the player clicks the mouse
+	5) Enemies move around the world when they are told to do so (don't get too close or far from the player)
+	6) Enemies can shoot the player. Ones that are told to aim at the player will aim at the player (and find some sweet shots using the fact that bullets can bounce)
+	7) Both enemies and the player die when hit by a bullet. The player has a slightly small hitbox and enemies slightly large so the game feels more fair to the player.
+	8) When the player dies, the game returns to the menu screen and updates the best level if needed
+	9) The game only displays the level reached on the last attempt if the game has already been played at least once since being launched (on the title screen)
+	10) The level is always surrounded by a layer of walls so the player can't escape
+	11) Clicking keys other than specified ones doesn't cause the game to break (though function keys do whatever they do otherwise, but that's an OS-level thing)
+	12) Clicking the X button actually closes the SFML window
+	13) No text gets output to the console
+
+Reflections:
+The main thing I would do differently next time would be to improve the joint collision/position system. Different classes store world position differently which causes problems when trying to determine collisions. Also, using square-based collisions rather than hacking together tile-based collisions at runtime would have made large portions of the project easier to implement.
+Some problems I encountered were using the wrong coordinate system (tile based vs pixel based, see above inconsistence); communicating data between classes that only talked to each other through the Game class, and getting player collisions to work (see above; with the poorly designed but properly implemented collision system). There were an assortment of other bugs and such that came out of semantic errors, but none of them were too hard to fix. Some of these include unintentional infinite loop with the flood fill algorithm, the cellular automata for level generation taking a solid 15 seconds, nothing getting drawn to the screen, the player being hit by their own bullet, and bullets bouncing off walls in strange ways. I never really had a problem getting C++ or SFML to do what I wanted, likely due to having several years of programming experience and the ability to read documentation down solid before even starting at Mines.
+I learned a decent amount about SFML during this project (seeing as it's a library I hadn't really used before 261 and the game relied on fairly heavily); as well as getting a decent amount of general practice with game development. I didn't implement anything features I hadn't programmed something similar to in the past, so I didn't learn a whole lot there; same with working on larger projects. Probably the biggest thing I improved doing this final project beyond SFML would be outlining code before starting work. In the past, I would code things then add features to old code as needed to get everything interfacing together. On this project, I worked to code as many of these cross-class interfaces as I could in advance, and where I didn't plan ahead, rather than creating a custom interface for each class-class interface, I would create ones that could be reused multiple times (such as the checking board collision function in the Game class).

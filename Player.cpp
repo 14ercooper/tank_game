@@ -3,7 +3,6 @@
 //
 
 #include <cmath>
-#include <iostream>
 
 #include "Player.h"
 #include "Weapon.h"

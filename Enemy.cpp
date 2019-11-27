@@ -9,8 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
-#include <vector>
 
 // Create a new enemy based on these attributes
 Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos, double movementSpeed, bool smartAim) {
@@ -216,7 +214,6 @@ void Enemy::_getMovement() {
 
             // Case 1: too close to player so "panic" and run directly away
             if (distToPlayer < 8.0 * game->getTileSize()) {
-                std::cout << "Case 1\n";
                 // Return the direction to run in (if possible, otherwise it'll bounce down to the next case
                 sf::Vector2f fleeDir;
                 fleeDir.x = thisX - playerPos.x;
@@ -232,7 +229,6 @@ void Enemy::_getMovement() {
 
             // Case 2: Too far from player so run toward them
             else if (distToPlayer > 16.0 * game->getTileSize()) {
-                std::cout << "Case 2\n";
                 // Move toward the player
                 sf::Vector2f moveDir;
                 moveDir.x = playerPos.x - thisX;
@@ -247,7 +243,6 @@ void Enemy::_getMovement() {
 
             // Case 3: Good distance from player so stay put
             else {
-                std::cout << "Case 3\n";
                 _movement = sf::Vector2f(0,0);
                 return;
             }

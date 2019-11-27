@@ -5,7 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <fstream>
-#include <iostream>
 
 #include "Game.h"
 #include "Board.h"
@@ -100,7 +99,7 @@ void Game::_updateBestLevel(int level) {
 void Game::run(const int windowSize, const int tileSize) {
 
     // Initialize the window
-    sf::RenderWindow window(sf::VideoMode(windowSize, windowSize), "If Wii Tanks Was Bullet Hell");
+    sf::RenderWindow window(sf::VideoMode(windowSize, windowSize), "Wii Tanks Ghost Bullet Hell");
     window.setVerticalSyncEnabled(true);
 
     // Set the game
