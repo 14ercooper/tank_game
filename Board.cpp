@@ -43,6 +43,7 @@ void Board::pollBoard() {
 
                 // Spawn enemies
                 int points = Game::getGame()->getLevel() * 10;
+                _miniboss = false;
                 while (points > 0) {
                     _spawnEnemy(points);
                 }
@@ -314,6 +315,24 @@ void Board::_spawnEnemy(int &points) {
         yPos = rand() % _tiles.size();
         if (!isColliding(xPos, yPos)) {
             break;
+        }
+    }
+
+    int forcedMinibossLevel = 0;
+    // Is there a miniboss? If not and one is needed, spawn one
+    if ((forcedMinibossLevel > 0 && !_miniboss) || (!_miniboss && Game::getGame()->getLevel() % 5 == 0)) {
+        // How strong?
+        int minibossLevel = Game::getGame()->getLevel() / 5;
+        if (forcedMinibossLevel > 0)
+            minibossLevel = forcedMinibossLevel;
+
+        // Spawn it (RIP player)
+        {
+            Enemy e(2.5 / minibossLevel, 300, 2 * (minibossLevel / 2), sf::Color (120, 120, 120), xPos, yPos, minibossLevel * Game::getGame()->getTileSize(), true);
+            Game::getGame()->addEnemy(e);
+            points /= 2;
+            _miniboss = true;
+            return;
         }
     }
 

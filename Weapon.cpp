@@ -38,6 +38,11 @@ sf::Color Weapon::getColor() const {
     return _color;
 }
 
+// Who shot the weapon?
+bool Weapon::isPlayerShot() {
+    return _playerShot;
+}
+
 // Is this weapon alive?
 bool Weapon::isAlive() const {
     return _alive;
@@ -63,7 +68,7 @@ void Weapon::setBounces(const int bounces) {
 // It just sets up a lot of variables
 // This isn't a constructor because I wanted it to be a function. It could have been in the constructor, though.
 // It just made the constructor really long
-void Weapon::init(const double posX, const double posY, const double dirX, const double dirY) {
+void Weapon::init(const double posX, const double posY, const double dirX, const double dirY, bool playerShot) {
     // Sets position
     _posX = posX;
     _posY = posY;
@@ -79,6 +84,9 @@ void Weapon::init(const double posX, const double posY, const double dirX, const
 
     // Marks this weapon as alive
     _alive = true;
+
+    // Who shot this?
+    _playerShot = playerShot;
 
     // Make sure deltaTime works
     _clock.restart();

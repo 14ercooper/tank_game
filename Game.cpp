@@ -279,12 +279,15 @@ void Game::run(const int windowSize, const int tileSize) {
                 double yLoc = w.getPosition().y;
                 if (!w.damaging())
                     continue;
+
                 // Check player
-                if (_player.isColliding(xLoc, yLoc, true)) {
+                if (!w.isPlayerShot() && _player.isColliding(xLoc, yLoc, true)) {
                     _player.die();
                 }
 
                 // Check enemies
+                if (!w.isPlayerShot())
+                    continue;
                 for (int i = 0; i < _enemies.size(); i++) {
                     if (_enemies.at(i).isColliding(xLoc, yLoc, true)) {
                         _enemies.at(i).die();
@@ -364,7 +367,7 @@ void Game::run(const int windowSize, const int tileSize) {
 
             // Draw text with instructions and whatnot
             std::string textToDraw;
-            textToDraw += "If Wii Tanks Was Bullet Hell";
+            textToDraw += "Wii Tanks Ghost Bullet Hell";
             textToDraw += "\nUse WASD to move, click to shoot";
             textToDraw += "\nPress 'n' to begin a game";
             if (hasPlayedGame) {

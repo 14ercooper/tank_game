@@ -85,6 +85,9 @@ private:
     int _makeWall;
     int _bigArea;
     double _airPercent;
+
+    // Tracks if a miniboss has been spawned
+    bool _miniboss;
 };
 
 #endif //SFML_PRACTICE_BOARD_H

@@ -22,8 +22,11 @@ public:
     // Get the position of this weapon
     [[nodiscard]] sf::Vector2f getPosition() const;
 
+    // Who shot it?
+    [[nodiscard]] bool isPlayerShot();
+
     // Initialize the weapon instance, making it ready for spawning
-    void init(double posX, double posY, double dirX, double dirY);
+    void init(double posX, double posY, double dirX, double dirY, bool playerShot);
 
     // Physics tick for weapon objects
     void move();
@@ -34,7 +37,7 @@ public:
     // Can this deal damage?
     [[nodiscard]] bool damaging() const;
 
-protected:
+private:
     // How fast is the weapon?
     double _speed;
 
@@ -58,6 +61,9 @@ protected:
 
     // Variables to help with bouncing
     int _maxBounces, _bouncesDone;
+
+    // Prevent friendly fire
+    bool _playerShot;
 };
 
 #endif //SFML_PRACTICE_WEAPON_H

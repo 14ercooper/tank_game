@@ -234,7 +234,7 @@ void Player::_cornerSlip() {
 // Basically just spawns a bullet moving from the player toward the click location
 void Player::attack(const sf::Vector2i mousePos) {
     // Create a weapon
-    Weapon w (200, sf::Color::Red);
+    Weapon w (200, sf::Color::Green); // Green since the player shot it
     w.setBounces(2);
 
     // Set needed variables
@@ -249,7 +249,7 @@ void Player::attack(const sf::Vector2i mousePos) {
     dirY = mouseY - yPos;
 
     // Initialize the weapon
-    w.init(xPos, yPos, dirX, dirY);
+    w.init(xPos, yPos, dirX, dirY, true);
 
     // Spawn it into the world
     Game::getGame()->addWeapon(w);

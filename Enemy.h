@@ -54,8 +54,8 @@ private:
 
     // Don't calculate movement too often
     sf::Clock _movementClock;
-    double _movementOffset{};
-    bool _strafeClockwise{};
+    double _movementOffset;
+    bool _strafeClockwise;
     sf::Vector2f _movement;
 };
 

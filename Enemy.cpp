@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 
 // Create a new enemy based on these attributes
 Enemy::Enemy(const double attackRate, const double weaponSpeed, const int weaponBounces, const sf::Color color, const double xPos, const double yPos, const double movementSpeed, const bool smartAim) {
@@ -53,10 +54,18 @@ bool Enemy::isAlive() const {
 void Enemy::move() {
     // Attack when needed
     if (_clock.getElapsedTime().asSeconds() >= _attackRate + _weaponDelay) {
+        // Don't shoot if inside a wall
+        std::cout << Game::getGame()->boardCollision(sf::Vector2f((_xPos + (Game::getGame()->getTileSize() / 2)), (_yPos + (Game::getGame()->getTileSize() / 2)))) << "\n";
+        if (Game::getGame()->boardCollision(sf::Vector2f((_xPos + (Game::getGame()->getTileSize() / 2)) / Game::getGame()->getTileSize(), (_yPos + (Game::getGame()->getTileSize() / 2)) / Game::getGame()->getTileSize()))) {
+            goto endOfIf; // Oh god but it works just fine :D
+        }
+
+        // Attack the player
         _attack(_aimAtPlayer());
         _weaponDelay = 0;
         _clock.restart();
     }
+    endOfIf: // Marker
 
     // Move
     double deltaTime = _deltaClock.getElapsedTime().asSeconds();
@@ -77,7 +86,7 @@ void Enemy::_attack(const double angle) const {
     double dirY = sin(angle);
 
     // Initialize the weapon
-    w.init(_xPos, _yPos, dirX, dirY);
+    w.init(_xPos, _yPos, dirX, dirY, false);
 
     // Get it into the game world
     Game::getGame()->addWeapon(w);
@@ -233,7 +242,7 @@ void Enemy::_getMovement() {
                 fleeDir.x /= sqrt(pow(fleeDir.x, 2) + pow(fleeDir.y, 2)); // Normalize vector
                 fleeDir.y /= sqrt(pow(fleeDir.x, 2) + pow(fleeDir.y, 2));
 
-                // Avoid moving into a wall
+                // Apply the movement
                 _speedMult = 1.5;
                 _movement = fleeDir;
                 return;
@@ -248,14 +257,38 @@ void Enemy::_getMovement() {
                 moveDir.x /= sqrt(pow(moveDir.x, 2) + pow(moveDir.y, 2)); // Normalize vector
                 moveDir.y /= sqrt(pow(moveDir.x, 2) + pow(moveDir.y, 2));
 
-                // Avoid moving into a wall
+                // Apply the movement
                 _movement = moveDir;
                 return;
             }
 
-            // Case 3: Good distance from player so stay put
+            // Case 3: Good distance from player so stay strafe to the side
             else {
-                _movement = sf::Vector2f(0,0);
+                // Which way would the enemy flee?
+                sf::Vector2f fleeDir;
+                fleeDir.x = thisX - playerPos.x;
+                fleeDir.y = thisY - playerPos.y;
+
+                // Rarely change strafe directions
+                if (rand() % 20 == 1) {
+                    _strafeClockwise = !_strafeClockwise;
+                }
+
+                // Strafe around the player
+                sf::Vector2f moveDir;
+                if (_strafeClockwise) {
+                    moveDir.x = fleeDir.y;
+                    moveDir.y = -1.0 * fleeDir.x;
+                }
+                else {
+                    moveDir.x = -1.0 * fleeDir.y;
+                    moveDir.y = fleeDir.x;
+                }
+
+                // Actually move
+                moveDir.x /= sqrt(pow(moveDir.x, 2) + pow(moveDir.y, 2)); // Normalize vector
+                moveDir.y /= sqrt(pow(moveDir.x, 2) + pow(moveDir.y, 2));
+                _movement = moveDir;
                 return;
             }
         }
