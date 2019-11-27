@@ -28,12 +28,12 @@ Player* Game::getPlayer() {
 }
 
 // Add a weapon object to the game
-void Game::addWeapon(Weapon &weapon) {
+void Game::addWeapon(const Weapon &weapon) {
     _weapons.push_back(weapon);
 }
 
 // Add an enemy object to the game
-void Game::addEnemy(Enemy &enemy) {
+void Game::addEnemy(const Enemy &enemy) {
     _enemies.push_back(enemy);
 }
 
@@ -44,25 +44,25 @@ void Game::resetAddedObjects() {
 }
 
 // Returns the current level
-int Game::getLevel() {
+int Game::getLevel() const {
     return _level;
 }
 
 // Returns board size
-int Game::getNumTilesX() {
+int Game::getNumTilesX() const {
     return _board.getBoard().size();
 }
-int Game::getNumTilesY() {
+int Game::getNumTilesY() const {
     return _board.getBoard().at(0).size();
 }
 
 // Check board collisions
-bool Game::boardCollision(sf::Vector2f pos) {
+bool Game::boardCollision(const sf::Vector2f pos) const {
     return _board.isColliding(pos.x, pos.y);
 }
 
 // Gets the size of a tile
-int Game::getTileSize() {
+int Game::getTileSize() const {
     return _board.getTileSize();
 }
 
@@ -363,7 +363,7 @@ void Game::run(const int windowSize, const int tileSize) {
             text.setFillColor(sf::Color::White);
 
             // Draw text with instructions and whatnot
-            std::string textToDraw = "";
+            std::string textToDraw;
             textToDraw += "If Wii Tanks Was Bullet Hell";
             textToDraw += "\nUse WASD to move, click to shoot";
             textToDraw += "\nPress 'n' to begin a game";

@@ -23,22 +23,22 @@ public:
     // Returns the current game object
     static Game* getGame();
     Player* getPlayer();
-    int getNumTilesX();
-    int getNumTilesY();
+    [[nodiscard]] int getNumTilesX() const;
+    [[nodiscard]] int getNumTilesY() const;
 
     // Add a weapon or enemy to the game
-    void addWeapon(Weapon& weapon);
-    void addEnemy(Enemy& enemy);
+    void addWeapon(const Weapon& weapon);
+    void addEnemy(const Enemy& enemy);
     void resetAddedObjects();
 
     // Gets the level
-    int getLevel();
+    [[nodiscard]] int getLevel() const;
 
     // Checks for a collision with the board
-    bool boardCollision(sf::Vector2f pos);
+    [[nodiscard]] bool boardCollision(sf::Vector2f pos) const;
 
     // Gets the size of a time
-    int getTileSize();
+    [[nodiscard]] int getTileSize() const;
 private:
     // Stores the current game object
     static Game* _theGame;
@@ -59,7 +59,7 @@ private:
 
     // Gets and updates the best level in the file
     void _getBestLevel();
-    void _updateBestLevel(int level);
+    static void _updateBestLevel(int level);
 
     // The gameboard
     Board _board;
