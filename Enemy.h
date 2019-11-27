@@ -17,12 +17,12 @@ public:
     void move();
 
     // Getters for different variables
-    sf::Color getColor();
-    sf::Vector2f getPosition();
-    bool isAlive();
+    [[nodiscard]] sf::Color getColor() const ;
+    [[nodiscard]] sf::Vector2f getPosition() const;
+    [[nodiscard]] bool isAlive() const;
 
     // Check collision and allow the enemy to die
-    bool isColliding(double x, double y, bool pixelPos);
+    [[nodiscard]] bool isColliding(double x, double y, bool pixelPos) const;
     void die();
 
 private:
@@ -30,19 +30,19 @@ private:
     Enemy();
 
     // Attack/spawn a weapon
-    void _attack(double angle);
+    void _attack(double angle) const;
 
     // Get attack angle
-    double _aimAtPlayer();
+    [[nodiscard]] double _aimAtPlayer() const;
 
     // Get movement direction
     void _getMovement();
 
     // Enemy variables
-    double _attackRate, _weaponSpeed, _xPos, _yPos, _movementSpeed;
-    int _weaponBounces;
-    bool _isAlive, _smartAim;
-    double _weaponDelay;
+    double _attackRate{}, _weaponSpeed{}, _xPos{}, _yPos{}, _movementSpeed{};
+    int _weaponBounces{};
+    bool _isAlive{}, _smartAim{};
+    double _weaponDelay{};
     double _speedMult = 1.0;
     sf::Color _color;
 
@@ -54,8 +54,8 @@ private:
 
     // Don't calculate movement too often
     sf::Clock _movementClock;
-    double _movementOffset;
-    bool _strafeClockwise;
+    double _movementOffset{};
+    bool _strafeClockwise{};
     sf::Vector2f _movement;
 };
 

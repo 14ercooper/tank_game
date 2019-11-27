@@ -31,20 +31,20 @@ Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color
 
 // Default constructor hidden and empty
 // Nothing uses it, make sure nothing uses it
-Enemy::Enemy() {}
+Enemy::Enemy() = default;
 
 // Get the enemy color
-sf::Color Enemy::getColor() {
+sf::Color Enemy::getColor() const {
     return _color;
 }
 
 // Get the enemy location
-sf::Vector2f Enemy::getPosition() {
+sf::Vector2f Enemy::getPosition() const {
     return sf::Vector2f(_xPos, _yPos);
 }
 
 // Is the enemy still alive?
-bool Enemy::isAlive() {
+bool Enemy::isAlive() const {
     return _isAlive;
 }
 
@@ -67,7 +67,7 @@ void Enemy::move() {
 }
 
 // Attack function
-void Enemy::_attack(double angle) {
+void Enemy::_attack(const double angle) const {
     // Create a weapon
     Weapon w (_weaponSpeed, sf::Color::Red);
     w.setBounces(_weaponBounces);
@@ -85,7 +85,7 @@ void Enemy::_attack(double angle) {
 
 // Check if a point is inside the enemy
 // This is more or less the same collision code as the player has, but has a toggle for the two coordinate systems
-bool Enemy::isColliding(double x, double y, bool pixelPos) {
+bool Enemy::isColliding(double x, double y, const bool pixelPos) const {
     int tileSize = Game::getGame()->getTileSize();
     if (!pixelPos) {
         x *= tileSize;
@@ -108,7 +108,7 @@ void Enemy::die() {
 // Then refines the shot to be accurate to the hundredth of a degree, giving the enemies very good aim if the player is in a hitabble area
 // This also accounts for bouncing off walls, leading to the enemy being capable of some pretty sweet trick shots from behind walls and across the map
 // I feel kinda bad for the player, with enemies this accurate
-double Enemy::_aimAtPlayer() {
+double Enemy::_aimAtPlayer() const {
     if (_smartAim) { // Don't do the math if it isn't needed
         Game* game = Game::getGame();
         sf::Vector2f playerPos = game->getPlayer()->getPos();
@@ -123,7 +123,7 @@ double Enemy::_aimAtPlayer() {
             double dirY = sin(angle * 1.0);
             double posX = _xPos;
             double posY = _yPos;
-            int minPlayerDist = 99999999;
+            double minPlayerDist = 99999999;
             while (bouncesUsed <= _weaponBounces) {
                 posX += dirX * 2;
                 posY += dirY * 2;
@@ -168,7 +168,7 @@ double Enemy::_aimAtPlayer() {
             double dirY = sin((bestAngle + (angle / 100.0)) * 1.0);
             double posX = _xPos;
             double posY = _yPos;
-            int minPlayerDist = 99999999;
+            double minPlayerDist = 99999999;
             while (bouncesUsed <= _weaponBounces) {
                 posX += dirX * 2;
                 posY += dirY * 2;
