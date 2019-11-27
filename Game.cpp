@@ -10,8 +10,11 @@
 #include "Board.h"
 #include "Player.h"
 
+// Did not want to type this a bunch
 using std::vector;
 
+// Have to initialize this or the static functions complain
+// Using a nullptr means that if it doesn't get initialized (which is really hard); things will break and this is intentional
 Game* Game::_theGame = nullptr;
 
 // Return the game
@@ -74,7 +77,7 @@ void Game::_getBestLevel() {
     inFile.close();
 }
 
-// Update the best level
+// Update the best level to the file and variable; but only if needed
 void Game::_updateBestLevel(int level) {
     // Load from the saved file the current value
     int saved = [](){
@@ -87,6 +90,7 @@ void Game::_updateBestLevel(int level) {
         inFile.close();
         return savedBest;
     }();
+    // Update it if the level value is better than the best level
     if (saved >= level)
         return;
     std::ofstream outFile("lvl.sav");
@@ -96,6 +100,9 @@ void Game::_updateBestLevel(int level) {
 }
 
 // The central game loop
+// This handles all the drawing of the game and all of the game logic (by instantiating and calling functions for other classes).
+// Basically the main loop, but in a different file since it makes main.cpp really easy to read
+// It also makes the game slightly more adherent to the principles of object oriented programming
 void Game::run(const int windowSize, const int tileSize) {
 
     // Initialize the window
@@ -123,7 +130,7 @@ void Game::run(const int windowSize, const int tileSize) {
     // Load the best level
     _getBestLevel();
 
-    // Key deduplication variables
+    // Key press deduplication variables
     bool keyNewMap = false;
     bool keyMovingLeft = false;
     bool keyMovingRight = false;

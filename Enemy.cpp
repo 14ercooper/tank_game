@@ -30,6 +30,7 @@ Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color
 }
 
 // Default constructor hidden and empty
+// Nothing uses it, make sure nothing uses it
 Enemy::Enemy() {}
 
 // Get the enemy color
@@ -48,6 +49,7 @@ bool Enemy::isAlive() {
 }
 
 // Tick the AI
+// This does stuff like moving and attacking
 void Enemy::move() {
     // Attack when needed
     if (_clock.getElapsedTime().asSeconds() >= _attackRate + _weaponDelay) {
@@ -81,7 +83,8 @@ void Enemy::_attack(double angle) {
     Game::getGame()->addWeapon(w);
 }
 
-// Check if a point is inside the player
+// Check if a point is inside the enemy
+// This is more or less the same collision code as the player has, but has a toggle for the two coordinate systems
 bool Enemy::isColliding(double x, double y, bool pixelPos) {
     int tileSize = Game::getGame()->getTileSize();
     if (!pixelPos) {
@@ -101,6 +104,10 @@ void Enemy::die() {
 }
 
 // Get the direction to shoot to hit the player
+// First checks at 1 degree increments around the circle for the shot that gets closest to the player
+// Then refines the shot to be accurate to the hundredth of a degree, giving the enemies very good aim if the player is in a hitabble area
+// This also accounts for bouncing off walls, leading to the enemy being capable of some pretty sweet trick shots from behind walls and across the map
+// I feel kinda bad for the player, with enemies this accurate
 double Enemy::_aimAtPlayer() {
     if (_smartAim) { // Don't do the math if it isn't needed
         Game* game = Game::getGame();
@@ -150,6 +157,8 @@ double Enemy::_aimAtPlayer() {
         }
 
         // Really hone in on sniping the player
+        // More or less the same as the initial tests, just trying to get even more accurate
+        // Some parts could be a reused function, but enough was different that I kept it out of a function
         double bestAngleDecimal = -1;
         bestPlayerDist = 99999999;
         for (int angle = -50; angle < 50; angle++) {
@@ -199,6 +208,7 @@ double Enemy::_aimAtPlayer() {
 }
 
 // What direction to move?
+// Goal is to keep 8 to 16 units away from the player at all times
 void Enemy::_getMovement() {
     if (_movementSpeed > 0.01) { // Don't do the math if it isn't needed
         // Start by not recalculating the path every frame
@@ -249,5 +259,6 @@ void Enemy::_getMovement() {
         }
         return;
     }
+    // If they aren't supposed to move, just make them not move
     _movement = sf::Vector2f(0,0);
 }

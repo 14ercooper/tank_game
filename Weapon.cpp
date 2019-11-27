@@ -60,6 +60,9 @@ void Weapon::setBounces(int bounces) {
 
 // Initialize the weapon to be part of the game world
 // Note that this does not spawn it into the game
+// It just sets up a lot of variables
+// This isn't a constructor because I wanted it to be a function. It could have been in the constructor, though.
+// It just made the constructor really long
 void Weapon::init(double posX, double posY, double dirX, double dirY) {
     // Sets position
     _posX = posX;

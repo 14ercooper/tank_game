@@ -23,6 +23,7 @@ Stuff I wish I would have added if I had more time, and could be used to extend 
 	Better player collision - The player can get about halfway into walls using corners. Maybe improve the collision detection to help keep this from happening
 	Screenshake/hit effects - Add some effects like screenshake or a quick pause of the game for when a hit lands on an enemy or the player. Likely do this by shifting things slightly during draw calls or skipping redrawing the game for a few frames in the game loop.
 	Death effects - Add an animated sprite that plays when the player or an enemy die; likely using SFML
+	Better aiming for enemies - They like to shoot each other. While funny, making them not would make the game much harder (if that's a thing that needs to happen)
 
 Tests:
 These don't fit perfectly into the types of tests we normally have, but the game 

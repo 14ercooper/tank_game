@@ -130,6 +130,8 @@ void Player::tickPhysics() {
 // This basically works by if the player ran into a wall their movement would be cancelled
 // Along both axis, so this adds back the velocity back along the uncollided axis (after checking
 // That the tile to slide into isn't also a wall
+// This code is a lot of boilerplate for the system, and is almost identical as you go through
+// But this method was about 10x faster than the best "compressed" method I could think of
 void Player::_wallSlide() {
     if (_vy < 0) {
         if (_vx > 0) {
@@ -229,6 +231,7 @@ void Player::_cornerSlip() {
 }
 
 // Handles the logic for attacking
+// Basically just spawns a bullet moving from the player toward the click location
 void Player::attack(const sf::Vector2i mousePos) {
     // Create a weapon
     Weapon w (200, sf::Color::Red);
@@ -253,6 +256,7 @@ void Player::attack(const sf::Vector2i mousePos) {
 }
 
 // Check if a point is inside the player
+// This is used for checking if something is colliding with the player, like say a bullet
 bool Player::isColliding(double x, double y, bool pixelPos) {
     if (pixelPos) {
         x /= Game::getGame()->getTileSize();
@@ -265,7 +269,7 @@ bool Player::isColliding(double x, double y, bool pixelPos) {
     return collision;
 }
 
-// Die
+// Handles player death
 void Player::die() {
     _dead = true;
 }
