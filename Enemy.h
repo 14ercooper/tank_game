@@ -43,6 +43,7 @@ private:
     int _weaponBounces;
     bool _isAlive, _smartAim;
     double _weaponDelay;
+    double _speedMult = 1.0;
     sf::Color _color;
 
     // Used as an attack timer

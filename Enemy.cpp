@@ -61,8 +61,8 @@ void Enemy::move() {
     // Move
     double deltaTime = _deltaClock.getElapsedTime().asSeconds();
     _getMovement();
-    _xPos += _movement.x * deltaTime * _movementSpeed;
-    _yPos += _movement.y * deltaTime * _movementSpeed;
+    _xPos += _movement.x * deltaTime * _movementSpeed * _speedMult;
+    _yPos += _movement.y * deltaTime * _movementSpeed * _speedMult;
     _deltaClock.restart();
 }
 
@@ -107,6 +107,7 @@ double Enemy::_aimAtPlayer() {
     if (_smartAim) { // Don't do the math if it isn't needed
         // TODO implement raycasting with wall bounces to be able to aim at the player using wall bounces
     }
+    // If it doesn't use smart aim, shoot randomly
     return (rand() % 36000) / 100.0;
 }
 
@@ -134,6 +135,7 @@ void Enemy::_getMovement() {
                 fleeDir.y /= sqrt(pow(fleeDir.x, 2) + pow(fleeDir.y, 2));
 
                 // Avoid moving into a wall
+                _speedMult = 1.5;
                 _movement = fleeDir;
             }
 
@@ -156,4 +158,5 @@ void Enemy::_getMovement() {
             }
         }
     }
+    _movement = sf::Vector2f(0,0);
 }
