@@ -112,6 +112,8 @@ double Enemy::_aimAtPlayer() const {
     if (_smartAim) { // Don't do the math if it isn't needed
         Game* game = Game::getGame();
         sf::Vector2f playerPos = game->getPlayer()->getPos();
+        playerPos.x += game->getTileSize() / 2;
+        playerPos.y += game->getTileSize() / 2;
 
         // Test 360 angles to see which is the best
         double bestAngle = -1;
