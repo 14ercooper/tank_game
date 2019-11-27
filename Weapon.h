@@ -14,13 +14,13 @@ public:
     Weapon(double speed, sf::Color color);
 
     // What color is this weapon?
-    sf::Color getColor();
+    [[nodiscard]] sf::Color getColor() const;
 
     // Is this weapon alive
-    bool isAlive();
+    [[nodiscard]] bool isAlive() const;
 
     // Get the position of this weapon
-    sf::Vector2f getPosition();
+    [[nodiscard]] sf::Vector2f getPosition() const;
 
     // Initialize the weapon instance, making it ready for spawning
     void init(double posX, double posY, double dirX, double dirY);
@@ -32,7 +32,7 @@ public:
     void setBounces(int bounces);
 
     // Can this deal damage?
-    bool damaging();
+    [[nodiscard]] bool damaging() const;
 
 protected:
     // How fast is the weapon?

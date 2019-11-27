@@ -11,7 +11,7 @@
 #include <cstdlib>
 
 // Create a new enemy based on these attributes
-Enemy::Enemy(double attackRate, double weaponSpeed, int weaponBounces, sf::Color color, double xPos, double yPos, double movementSpeed, bool smartAim) {
+Enemy::Enemy(const double attackRate, const double weaponSpeed, const int weaponBounces, const sf::Color color, const double xPos, const double yPos, const double movementSpeed, const bool smartAim) {
     _attackRate = attackRate;
     _weaponSpeed = weaponSpeed;
     _weaponDelay = attackRate * ((rand() % 1000) / 1000.0);

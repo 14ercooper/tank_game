@@ -43,12 +43,12 @@ Player::Player(Board &board) {
 }
 
 // Is the player initialized?
-bool Player::isInitialized() {
+bool Player::isInitialized() const {
     return _initialized;
 }
 
 // Get the player's position
-sf::Vector2f Player::getPos() {
+sf::Vector2f Player::getPos() const {
     return sf::Vector2f(_x * _gameboard.getTileSize(), _y * _gameboard.getTileSize());
 }
 
@@ -239,8 +239,8 @@ void Player::attack(const sf::Vector2i mousePos) {
 
     // Set needed variables
     double xPos, yPos, mouseX, mouseY, dirX, dirY;
-    xPos = this->getPos().x + _gameboard.getTileSize() / 2;
-    yPos = this->getPos().y + _gameboard.getTileSize() / 2;
+    xPos = this->getPos().x + _gameboard.getTileSize() / 2.0;
+    yPos = this->getPos().y + _gameboard.getTileSize() / 2.0;
     mouseX = mousePos.x;
     mouseY = mousePos.y;
 
@@ -257,7 +257,7 @@ void Player::attack(const sf::Vector2i mousePos) {
 
 // Check if a point is inside the player
 // This is used for checking if something is colliding with the player, like say a bullet
-bool Player::isColliding(double x, double y, bool pixelPos) {
+bool Player::isColliding(double x, double y, const bool pixelPos) const {
     if (pixelPos) {
         x /= Game::getGame()->getTileSize();
         y /= Game::getGame()->getTileSize();
@@ -273,6 +273,6 @@ bool Player::isColliding(double x, double y, bool pixelPos) {
 void Player::die() {
     _dead = true;
 }
- bool Player::isDead() {
+ bool Player::isDead() const {
     return _dead;
 }

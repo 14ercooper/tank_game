@@ -21,16 +21,16 @@ public:
     void tickPhysics();
 
     // Get if the player object exists and where it exists
-    bool isInitialized();
-    sf::Vector2f getPos();
+    [[nodiscard]] bool isInitialized() const;
+    [[nodiscard]] sf::Vector2f getPos() const;
 
     // Attack
     void attack(sf::Vector2i mousePos);
 
     // Check if a point inside the player, and a die function
-    bool isColliding(double x, double y, bool pixelPos);
+    [[nodiscard]] bool isColliding(double x, double y, bool pixelPos) const;
     void die();
-    bool isDead();
+    [[nodiscard]] bool isDead() const;
 
 private:
     // Helper functions to make movement near walls feel better

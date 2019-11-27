@@ -21,7 +21,7 @@ Weapon::Weapon() {
 }
 
 // Constructor to set speed and color
-Weapon::Weapon(double speed, sf::Color color) {
+Weapon::Weapon(const double speed, const sf::Color color) {
     this->_speed = speed;
     this->_color = color;
     _posX = 0;
@@ -34,27 +34,27 @@ Weapon::Weapon(double speed, sf::Color color) {
 }
 
 // Return the color of the weapon
-sf::Color Weapon::getColor() {
+sf::Color Weapon::getColor() const {
     return _color;
 }
 
 // Is this weapon alive?
-bool Weapon::isAlive() {
+bool Weapon::isAlive() const {
     return _alive;
 }
 
 // Can this weapon deal damage yet?
-bool Weapon::damaging() {
+bool Weapon::damaging() const {
     return _aliveTime.getElapsedTime().asSeconds() > 0.25;
 }
 
 // Returns the current position of this weapon
-sf::Vector2f Weapon::getPosition() {
+sf::Vector2f Weapon::getPosition() const {
     return sf::Vector2f(_posX, _posY);
 }
 
 // How many times can this weapon bounce
-void Weapon::setBounces(int bounces) {
+void Weapon::setBounces(const int bounces) {
     _maxBounces = bounces;
 }
 
@@ -63,7 +63,7 @@ void Weapon::setBounces(int bounces) {
 // It just sets up a lot of variables
 // This isn't a constructor because I wanted it to be a function. It could have been in the constructor, though.
 // It just made the constructor really long
-void Weapon::init(double posX, double posY, double dirX, double dirY) {
+void Weapon::init(const double posX, const double posY, const double dirX, const double dirY) {
     // Sets position
     _posX = posX;
     _posY = posY;
