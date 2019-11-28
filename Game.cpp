@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <fstream>
+#include <iostream>
 
 #include "Game.h"
 #include "Board.h"
@@ -105,6 +106,9 @@ void Game::_updateBestLevel(int level) {
 // It also makes the game slightly more adherent to the principles of object oriented programming
 void Game::run(const int windowSize, const int tileSize) {
 
+    // Debug mode
+    bool isDebug = true;
+
     // Initialize the window
     sf::RenderWindow window(sf::VideoMode(windowSize, windowSize), "Wii Tanks Ghost Bullet Hell");
     window.setVerticalSyncEnabled(true);
@@ -172,6 +176,7 @@ void Game::run(const int windowSize, const int tileSize) {
                         _level = 1;
                         _board.newBoard();
                         _player = Player();
+                        Player::health = 5;
                         keyNewMap = true;
                         _gameRunning = true;
                         hasPlayedGame = true;
@@ -197,6 +202,15 @@ void Game::run(const int windowSize, const int tileSize) {
                         keyMovingDown = true;
                     }
 
+                    // Debug tools
+                    if (event.key.code == sf::Keyboard::H)
+                        Player::health = 99999;
+                    if (event.key.code == sf::Keyboard::L) {
+                        _level += 10;
+                        _board.newBoard();
+                        _player = Player();
+                        _gameRunning = true;
+                    }
                     break;
 
                 case sf::Event::KeyReleased:
@@ -305,6 +319,7 @@ void Game::run(const int windowSize, const int tileSize) {
                 // Check player
                 if (!w.isPlayerShot() && _player.isColliding(xLoc, yLoc, true)) {
                     _player.die();
+                    _weapons.erase(_weapons.begin() + j);
                 }
 
                 // Check enemies
@@ -330,7 +345,6 @@ void Game::run(const int windowSize, const int tileSize) {
                 _level++;
                 _board.newBoard();
                 _player = Player();
-
             }
 
             // Draw the player
@@ -375,6 +389,17 @@ void Game::run(const int windowSize, const int tileSize) {
                 rs.setScale(getTileSize() / ghost.getSize().x * 1.4, getTileSize() / ghost.getSize().y * 1.4);
                 window.draw(rs);
             }
+
+            // Draw some UI elements
+            std::string text = " HP: " + std::to_string(Player::health);
+            text += "\nLvl: " + std::to_string(_level);
+            sf::Text textElement;
+            textElement.setString(text);
+            textElement.setStyle(sf::Text::Bold);
+            textElement.setFont(font);
+            textElement.setCharacterSize(30);
+            textElement.setFillColor(sf::Color::Black);
+            window.draw(textElement);
 
             // Draw the window
             window.display();

@@ -2,7 +2,7 @@ Logan Cooper, CSCI 261 Section A
 Project Title: Wii Tanks Ghost Bullet Hell
 
 Problem Description:
-Make a video game using SFML, with gameplay similar to Wii Tanks; but with a lot more enemies (hence bullet hell) who can also go through walls (hence the ghosts). The player should be able to move around the arena and shoot at the ghosts, while the ghosts also move around and attempt to kill the player. Everything has a single health, so making a mistake is severely punished. There are a handful of different types of ghosts, which vary in movement speed (if they move at all), how fast the bullets they shoot are, and if they are smart enough to aim at the player or just shoot randomly. Levels are randomly generated on a grid, with the player and ghost spawn locations randomly selected as well. The game keeps track of your best level using a save file on disk, which it will create if it doesn't already exist. Bullets also have the ability to bounce off walls a handful of times, varying between the player and each type of enemy. There is no end to the game, the goal is to get as far as possible before dying (my personal record is level 9 before a cyan ghost sniped me).
+Make a video game using SFML, with gameplay similar to Wii Tanks; but with a lot more enemies (hence bullet hell) who can also go through walls (hence the ghosts). The player should be able to move around the arena and shoot at the ghosts, while the ghosts also move around and attempt to kill the player. Every enemy has a single health, and the player gets 5 health for the entire game. There are a handful of different types of ghosts, which vary in movement speed (if they move at all), how fast the bullets they shoot are, and if they are smart enough to aim at the player or just shoot randomly. Levels are randomly generated on a grid, with the player and ghost spawn locations randomly selected as well. The game keeps track of your best level using a save file on disk, which it will create if it doesn't already exist. Bullets also have the ability to bounce off walls a handful of times, varying between the player and each type of enemy. There is no end to the game, the goal is to get as far as possible before dying (my personal record is level 14 before a cyan ghost sniped my last health).
 
 Program Documentation:
 This program needs to be built using SFML.
@@ -10,8 +10,9 @@ All controls are provided in-game, though here is a quick run-down:
 	WASD to move the player
 	Left click to shoot a bullet at the click location
 	N to start a new game from the title screen
+	Also, since I left debug mode on, H gives the player a lot of health, and L increases the level by 10
 Stuff I wish I would have added if I had more time, and could be used to extend the program:
-	Textures for the walls/floor/player/ghosts - Likely using SFML to load the textures and then coloring them based on the enemy type
+	Animated textures for the walls/floor/player/ghosts - Likely using SFML to load the textures and then coloring them based on the enemy type
 	Audio - Some form of music, likely using SFML to load and play
 	Actual title screen - Again, loading an image using SFML and displaying it would be nice
 	Customizable level sizes - The game class is built around letting you specify level sizes and tile sizes, so just get user input and pass it to a new game instance would likely work

@@ -8,6 +8,8 @@
 #include "Weapon.h"
 #include "Game.h"
 
+int Player::health = 0;
+
 // Blank player constructor for initialization purposes
 Player::Player () {
     _x = -1, _y = -1, _vx = -1, _vy = -1, _movementSpeed = -1;
@@ -269,9 +271,12 @@ bool Player::isColliding(double x, double y, const bool pixelPos) const {
     return collision;
 }
 
-// Handles player death
+// Handles player death and damage
 void Player::die() {
-    _dead = true;
+    Player::health--;
+    if (Player::health <= 0) {
+        _dead = true;
+    }
 }
  bool Player::isDead() const {
     return _dead;

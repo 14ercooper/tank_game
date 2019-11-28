@@ -32,6 +32,9 @@ public:
     void die();
     [[nodiscard]] bool isDead() const;
 
+    // The player should have a few health
+    static int health;
+
 private:
     // Helper functions to make movement near walls feel better
     void _wallSlide();
