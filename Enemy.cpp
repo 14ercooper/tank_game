@@ -9,7 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
 
 // Create a new enemy based on these attributes
 Enemy::Enemy(const double attackRate, const double weaponSpeed, const int weaponBounces, const sf::Color color, const double xPos, const double yPos, const double movementSpeed, const bool smartAim) {
@@ -55,7 +54,6 @@ void Enemy::move() {
     // Attack when needed
     if (_clock.getElapsedTime().asSeconds() >= _attackRate + _weaponDelay) {
         // Don't shoot if inside a wall
-        std::cout << Game::getGame()->boardCollision(sf::Vector2f((_xPos + (Game::getGame()->getTileSize() / 2)), (_yPos + (Game::getGame()->getTileSize() / 2)))) << "\n";
         if (Game::getGame()->boardCollision(sf::Vector2f((_xPos + (Game::getGame()->getTileSize() / 2)) / Game::getGame()->getTileSize(), (_yPos + (Game::getGame()->getTileSize() / 2)) / Game::getGame()->getTileSize()))) {
             goto endOfIf; // Oh god but it works just fine :D
         }
