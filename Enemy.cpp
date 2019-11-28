@@ -230,6 +230,7 @@ void Enemy::_getMovement() {
             double thisX = _xPos;
             double thisY = _yPos;
             double distToPlayer = sqrt(pow(thisX - playerPos.x, 2) + pow(thisY - playerPos.y, 2));
+            _speedMult = 1;
 
             // Case 1: too close to player so "panic" and run directly away
             if (distToPlayer < 8.0 * game->getTileSize()) {

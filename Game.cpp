@@ -121,9 +121,21 @@ void Game::run(const int windowSize, const int tileSize) {
 
     // Load the font
     sf::Font font;
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("game_resources/arial.ttf")) {
         // Well uhh this is bad
         // We really need that font to load
+        return;
+    }
+
+    // Load some basic sprites
+    sf::Texture wall, ghost, player;
+    if (!wall.loadFromFile("game_resources/World.png")) {
+        return;
+    }
+    if (!ghost.loadFromFile("game_resources/Ghost.png")) {
+        return;
+    }
+    if (!player.loadFromFile("game_resources/Player.png")) {
         return;
     }
 
@@ -250,25 +262,35 @@ void Game::run(const int windowSize, const int tileSize) {
             vector<vector<bool> > tiles = _board.getBoard();
 
             // Create the square array based on the board contents
-            vector<sf::RectangleShape> tileShapes;
+            vector<sf::Sprite> tileShapes;
             for (int i = 0; i < tiles.size(); i++) {
                 for (int j = 0; j < tiles.at(i).size(); j++) {
                     if (tiles.at(i).at(j)) {
-                        sf::RectangleShape shape(sf::Vector2f(tileSize, tileSize));
+                        //sf::RectangleShape shape(sf::Vector2f(tileSize, tileSize));
+                        //shape.setPosition(i * tileSize, j * tileSize);
+                        //shape.setFillColor(sf::Color::Green);
+                        sf::Sprite shape;
+                        shape.setTexture(wall);
+                        shape.setColor(sf::Color::Green);
                         shape.setPosition(i * tileSize, j * tileSize);
-                        shape.setFillColor(sf::Color::Green);
+                        shape.setScale(getTileSize() / wall.getSize().x, getTileSize() / wall.getSize().y);
                         tileShapes.push_back(shape);
                     } else {
-                        sf::RectangleShape shape(sf::Vector2f(tileSize, tileSize));
+                        //sf::RectangleShape shape(sf::Vector2f(tileSize, tileSize));
+                        //shape.setPosition(i * tileSize, j * tileSize);
+                        //shape.setFillColor(sf::Color::Blue);
+                        sf::Sprite shape;
+                        shape.setTexture(wall);
+                        shape.setColor(sf::Color::Blue);
                         shape.setPosition(i * tileSize, j * tileSize);
-                        shape.setFillColor(sf::Color::Blue);
+                        shape.setScale(getTileSize() / wall.getSize().x, getTileSize() / wall.getSize().y);
                         tileShapes.push_back(shape);
                     }
                 }
             }
 
             // Draw the cave walls to the array
-            for (sf::RectangleShape s : tileShapes) {
+            for (sf::Sprite s : tileShapes) {
                 window.draw(s);
             }
 
@@ -314,10 +336,12 @@ void Game::run(const int windowSize, const int tileSize) {
             // Draw the player
             if (_player.isInitialized()) {
                 sf::Vector2f playerPos = _player.getPos();
-                sf::RectangleShape player(sf::Vector2f(tileSize, tileSize));
-                player.setPosition(playerPos);
-                player.setFillColor(sf::Color::Red);
-                window.draw(player);
+                sf::Sprite playerSprite;
+                playerSprite.setTexture(player);
+                playerSprite.setColor(sf::Color::Red);
+                playerSprite.setPosition(playerPos);
+                playerSprite.setScale(getTileSize() / player.getSize().x * 1.25, getTileSize() / player.getSize().y * 1.25);
+                window.draw(playerSprite);
             }
 
             // Draw the weapons
@@ -344,9 +368,11 @@ void Game::run(const int windowSize, const int tileSize) {
                     i--; // Same as weapons, don't want to skip an update
                     continue;
                 }
-                sf::RectangleShape rs(sf::Vector2f(tileSize, tileSize));
+                sf::Sprite rs;
+                rs.setTexture(ghost);
+                rs.setColor(e.getColor());
                 rs.setPosition(e.getPosition());
-                rs.setFillColor(e.getColor());
+                rs.setScale(getTileSize() / ghost.getSize().x * 1.4, getTileSize() / ghost.getSize().y * 1.4);
                 window.draw(rs);
             }
 
