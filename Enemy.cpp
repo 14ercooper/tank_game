@@ -84,7 +84,7 @@ void Enemy::_attack(const double angle) const {
     double dirY = sin(angle);
 
     // Initialize the weapon
-    w.init(_xPos, _yPos, dirX, dirY, false);
+    w.init(_xPos + Game::getGame()->getTileSize() / 2, _yPos + Game::getGame()->getTileSize() / 2, dirX, dirY, false);
 
     // Get it into the game world
     Game::getGame()->addWeapon(w);
@@ -130,8 +130,8 @@ double Enemy::_aimAtPlayer() const {
             int bouncesUsed = 0;
             double dirX = cos(angle * 1.0); // Make sure these are doubles
             double dirY = sin(angle * 1.0);
-            double posX = _xPos;
-            double posY = _yPos;
+            double posX = _xPos + Game::getGame()->getTileSize() / 2;
+            double posY = _yPos + Game::getGame()->getTileSize() / 2;
             double minPlayerDist = 99999999;
             while (bouncesUsed <= _weaponBounces) {
                 posX += dirX * 2;
@@ -175,8 +175,8 @@ double Enemy::_aimAtPlayer() const {
             int bouncesUsed = 0;
             double dirX = cos((bestAngle + (angle / 100.0)) * 1.0); // Make sure these are doubles
             double dirY = sin((bestAngle + (angle / 100.0)) * 1.0);
-            double posX = _xPos;
-            double posY = _yPos;
+            double posX = _xPos + Game::getGame()->getTileSize() / 2;
+            double posY = _yPos + Game::getGame()->getTileSize() / 2;
             double minPlayerDist = 99999999;
             while (bouncesUsed <= _weaponBounces) {
                 posX += dirX * 2;

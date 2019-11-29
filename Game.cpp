@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 #include "Game.h"
 #include "Board.h"
@@ -344,6 +345,7 @@ void Game::run(const int windowSize, const int tileSize) {
             if (_enemies.empty() && !_board.isGenerating()) {
                 _level++;
                 _board.newBoard();
+                Player::health += ceil(_level / 3); // Heal the player a little bit each level, increasing as the game goes on
                 _player = Player();
             }
 
