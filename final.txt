@@ -19,15 +19,15 @@ Stuff I wish I would have added if I had more time, and could be used to extend 
 	Better pathfinding - The enemies like to just hang out in walls. Sure, they are ghosts, but maybe just passing through walls rather than stopping in them. Probably just have them "run" more from the player if they stop moving and are still in a wall
 	Balance the game better - Tweak the enemy variables a bit. Sure, they are supposed to be hard, but some of then (like cyan) are borderline unfair to the player
 	Optimize the game - There are a lot of sections that use while loops and vectors or nested for loop or similar, which are quite slow. Could go through and improve a handful of these bits of code.
-	Add bosses - Maybe every 5 or 10 levels add a boss enemy who can take multiple hits, attack with multiple bullets, spawn new enemies, etc.
+	Add bosses - Maybe every 5 or 10 levels add a boss enemy who can take multiple hits, attack with multiple bullets, spawn new enemies, etc. Basically a buffed gray ghost.
 	More level variety - All levels are made using the same generator. Maybe add a few more types of generators to the game
 	Better player collision - The player can get about halfway into walls using corners. Maybe improve the collision detection to help keep this from happening
 	Screenshake/hit effects - Add some effects like screenshake or a quick pause of the game for when a hit lands on an enemy or the player. Likely do this by shifting things slightly during draw calls or skipping redrawing the game for a few frames in the game loop.
 	Death effects - Add an animated sprite that plays when the player or an enemy die; likely using SFML
-	Better aiming for enemies - They like to shoot each other. While funny, making them not would make the game much harder (if that's a thing that needs to happen)
+	Pause function - Make it so the player can pause mid-game; likely by just pausing the game loop.
 
 Tests:
-These don't fit perfectly into the types of tests we normally have, but the game 
+These don't fit perfectly into the types of tests we normally have, but here are some scenarios the game functions normally for:
 	1) Every time the player presses 'n' on the title screen, a new level layout with different enemy layouts gets generated
 	2) Defeating all enemies in a level loads a new, harder level for the player to play
 	3) The game remembers your best level, and will remind you every time you're on the title screen
